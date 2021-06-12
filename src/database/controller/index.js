@@ -1,5 +1,5 @@
 const Database = require('../domain');
-// require sharing.js
+require('../domain/sharing');
 
 // sync
 async function init() {
