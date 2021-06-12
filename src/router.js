@@ -1,5 +1,5 @@
 const Router = require('express').Router();
 
-Router.use('/users', require('./users/controllers/router.js'))
+Router.use('/local', require('./local/controllers/router.js'))
 
 module.exports = Router

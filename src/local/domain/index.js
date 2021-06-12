@@ -1,4 +1,4 @@
-const User = require('./atributtes.js');
+const User = require('./models.js');
 
 function single(attr) {
   return User.findOne(attr)

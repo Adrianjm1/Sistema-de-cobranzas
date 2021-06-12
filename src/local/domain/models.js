@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize');
-const db = require('../../../database/domain')
+const db = require('../../database/domain')
 
 class Local extends Model {}
 Local.init({
@@ -19,11 +19,11 @@ Local.init({
   },
   monthlyUSD: {
     type: DataTypes.DECIMAL(8,2),
-    defaultValue: ''
+    defaultValue: 0
   },
   balance: {
     type: DataTypes.DECIMAL(8,2),
-    defaultValue: ''
+    defaultValue: 0
   }
 }, {sequelize: db, modelName: 'locales'});
 
