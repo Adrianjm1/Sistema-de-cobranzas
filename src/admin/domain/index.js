@@ -1,5 +1,5 @@
-const User = require('./atributtes.js');
-
+/* const User = require('./atributtes.js');
+ */
 function single(attr) {
   return User.findOne(attr)
 }

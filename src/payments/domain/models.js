@@ -23,8 +23,8 @@ Payment.init({
   },
   date: {
     type: DataTypes.DATE,
-    defaultValue: ''
-  }
+/*     defaultValue: 0
+ */  }
 }, {sequelize: db, modelName: 'payments'});
 
 module.exports = Payment;

@@ -29,4 +29,4 @@ Owner.init({
 
 }, {sequelize: db, modelName: 'owners'});
 
-module.exports = User;
+module.exports = Owner;

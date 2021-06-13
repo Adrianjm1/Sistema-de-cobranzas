@@ -1,5 +1,5 @@
-const User = require('./models.js');
-
+/* const User = require('./models.js');
+ */
 function single(attr) {
   return User.findOne(attr)
 }
