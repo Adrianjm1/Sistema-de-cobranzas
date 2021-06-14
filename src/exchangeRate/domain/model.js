@@ -9,12 +9,8 @@ Exchange.init({
     autoIncrement: true,
     allowNull: false
   },
-  amount: {
+  price: {
     type: DataTypes.DECIMAL(10,2),
-    allowNull: false
-  },
-  name: {
-    type: DataTypes.STRING(30),
     allowNull: false
   },
   date: {

@@ -20,8 +20,8 @@ Local.hasMany(Payments, {foreignKey: 'idLocal'});
 Payments.belongsTo(Local,  {foreignKey: 'idLocal'})
 
 // Payments - ExchangeRate: One to One
-Payments.hasOne(ExchangeRate, {foreignKey: 'idExchangeRate'});
-ExchangeRate.belongsTo(Payments, {foreignKey: 'idExchangeRate'});
+ExchangeRate.hasOne(Payments, {foreignKey: 'idExchangeRate'});
+Payments.belongsTo(ExchangeRate, {foreignKey: 'idExchangeRate'});
 
 // Admin - Local: One to Many
 Admin.hasMany(Local, {foreignKey: 'idAdmin'});

@@ -17,6 +17,6 @@ Admin.init({
     type: DataTypes.STRING(30),
     allowNull: false
   },
-}, {sequelize: db, modelName: 'users'});
+}, {sequelize: db, modelName: 'admins'});
 
 module.exports = Admin;

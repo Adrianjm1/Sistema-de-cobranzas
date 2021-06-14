@@ -17,10 +17,6 @@ LagoMallData.init({
     type: DataTypes.DECIMAL(10,2),
     allowNull: false
   },
-  lastname: {
-    type: DataTypes.STRING(30),
-    defaultValue: ''
-  }
 }, {sequelize: db, modelName: 'lagoMallData'});
 
 module.exports = LagoMallData;

@@ -1,15 +1,19 @@
 /* const User = require('./atributtes.js');
  */
+
+const Owner = require('./model')
+
+
 function single(attr) {
-  return User.findOne(attr)
+  return Owner.findOne(attr)
 }
 
 function all(attr) {
-  return User.findAll(attr)
+  return Owner.findAll(attr)
 }
 
 function create(attr){
-  return User.create(attr)
+  return Owner.create(attr)
 }
 
 module.exports = {

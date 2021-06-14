@@ -1,19 +1,13 @@
-/* const User = require('./atributtes.js');
- */
-function single(attr) {
-  return User.findOne(attr)
-}
+ const Lagomalldata = require('./models');
+ 
 
 function all(attr) {
-  return User.findAll(attr)
+  return Lagomalldata.findAll(attr)
 }
 
-function create(attr){
-  return User.create(attr)
-}
+
 
 module.exports = {
-  single,
-  all,
-  create
+  all
+
 }

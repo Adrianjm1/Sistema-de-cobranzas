@@ -11,6 +11,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(require('morgan')(':method :url :status :res[content-length] - :response-time ms'))
 
 // Router
-app.use('/api/v1', require('./src/router'));
+app.use('/api', require('./src/router'));
 
 app.listen(app.get('PORT'), db)
