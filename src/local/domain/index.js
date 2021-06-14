@@ -1,15 +1,14 @@
-/* const User = require('./models.js');
- */
+const Local = require('./models')
 function single(attr) {
-  return User.findOne(attr)
+  return Local.findOne(attr)
 }
 
 function all(attr) {
-  return User.findAll(attr)
+  return Local.findAll(attr)
 }
 
 function create(attr){
-  return User.create(attr)
+  return Local.create(attr)
 }
 
 module.exports = {

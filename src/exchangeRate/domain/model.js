@@ -15,6 +15,7 @@ Exchange.init({
   },
   date: {
     type: DataTypes.DATE,
+    allowNull: false
 /*     defaultValue: ''
  */  }
 }, {sequelize: db, modelName: 'exchanges'});

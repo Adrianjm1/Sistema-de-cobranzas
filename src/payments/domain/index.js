@@ -1,15 +1,15 @@
-const User = require('./models.js');
+const Payments = require('./models.js');
 
 function single(attr) {
-  return User.findOne(attr)
+  return Payments.findOne(attr)
 }
 
 function all(attr) {
-  return User.findAll(attr)
+  return Payments.findAll(attr)
 }
 
 function create(attr){
-  return User.create(attr)
+  return Payments.create(attr)
 }
 
 module.exports = {

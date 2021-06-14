@@ -1,15 +1,15 @@
-const User = require('./model.js');
+const Exchange = require('./model.js');
 
 function single(attr) {
-  return User.findOne(attr)
+  return Exchange.findOne(attr)
 }
 
 function all(attr) {
-  return User.findAll(attr)
+  return Exchange.findAll(attr)
 }
 
 function create(attr){
-  return User.create(attr)
+  return Exchange.create(attr)
 }
 
 module.exports = {

@@ -1,9 +1,9 @@
-const User = require('../domain')
+const Payments = require('../domain')
 const { Id, Schema } = require('../validations')
 
 async function getAll(req, res){
   try {
-    const data = await User.all();
+    const data = await Payments.all();
     res.send(data)
   } catch (e) {
     res.status(400).send({error: e.message})
@@ -13,7 +13,7 @@ async function getAll(req, res){
 async function getOne(req, res){
   try {
     const { id } = await Id.validateAsync(req.params);
-    const data = await User.single({
+    const data = await Payments.single({
       where: {age: id}
     });
     res.send(data)
@@ -25,7 +25,7 @@ async function getOne(req, res){
 async function make(req, res){
   try {
     const body = await Schema.validateAsync(req.body);
-    const data = await User.create(body);
+    const data = await Payments.create(body);
     res.send(data)
   } catch (e) {
     res.status(400).send({error: e.message})
