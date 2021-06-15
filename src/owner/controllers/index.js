@@ -1,3 +1,5 @@
+const Local = require('../../local/domain/models');
+const Admin = require('../../admin/domain/model');
 const Owner = require('../domain')
 const { Id, Schema } = require('../validations')
 
@@ -31,9 +33,48 @@ async function make(req, res){
     res.status(400).send({error: e.message})
   }
 }
+/*
+async function test2(req,res){
+
+  try{
+
+    const { id } = await Id.validateAsync(req.params);
+    const ownerylocal = await Owner.single({
+      where: {
+        id: id
+      },
+      include: Local.name
+    });
+
+    res.send(ownerylocal)
+
+
+
+  }catch(e){
+    res.status(400).send({error: e.message})
+  }
+}*/
+
+
+async function test(req, res){
+  try {
+    const { id } = await Id.validateAsync(req.params);
+    const data = await Owner.single({
+      attributes: ['firstName'],
+      where: {id}, include: [{ model: Local, attributes: ['name'],include: [{ model: Admin, attributes: ['username']}]  }]
+                    
+    });
+    res.send(data)
+  } catch (e) {
+    res.status(400).send({error: e.message})
+  }
+}
+
+
 
 module.exports = {
   getAll,
   getOne,
-  make
+  make,
+  test
 }
