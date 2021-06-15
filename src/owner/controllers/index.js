@@ -1,4 +1,8 @@
-const Owner = require('../domain')
+const Owner = require('../domain');
+const Local = require('../../local/domain/models');
+const Admin = require('../../admin/domain/model');
+
+
 const { Id, Schema } = require('../validations')
 
 async function getAll(req, res){

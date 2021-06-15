@@ -9,6 +9,10 @@ LagoMallData.init({
     autoIncrement: true,
     allowNull: false
   },
+  month: {
+    type: DataTypes.STRING(20),
+    allowNull: false
+  },
   breakeven: {
     type: DataTypes.DECIMAL(4,2),
     allowNull: false
