@@ -1,9 +1,23 @@
 const Local = require('../domain')
+const Owner = require('../../owner/domain/model')
 const { Id, Schema } = require('../validations')
 
 async function getAll(req, res){
   try {
     const data = await Local.all();
+    res.send(data)
+  } catch (e) {
+    res.status(400).send({error: e.message})
+  }
+}
+
+async function getTable(req, res){
+  try {
+      const data = await Local.all({
+      attributes: ['name', 'percentageOfCC', 'monthlyUSD', 'balance'],
+      include: [{ model: Owner, attributes: ['firstName', 'lastName'] }]
+                    
+    });
     res.send(data)
   } catch (e) {
     res.status(400).send({error: e.message})
@@ -35,5 +49,6 @@ async function make(req, res){
 module.exports = {
   getAll,
   getOne,
-  make
+  make,
+  getTable
 }

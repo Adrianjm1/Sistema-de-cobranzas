@@ -1,6 +1,3 @@
-/* const User = require('./atributtes.js');
- */
-
 const Owner = require('./model')
 
 
@@ -15,6 +12,7 @@ function all(attr) {
 function create(attr){
   return Owner.create(attr)
 }
+
 
 module.exports = {
   single,
