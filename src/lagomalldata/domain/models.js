@@ -21,6 +21,11 @@ LagoMallData.init({
     type: DataTypes.DECIMAL(10,2),
     allowNull: false
   },
+  discount:{
+    type: DataTypes.INTEGER,
+    allowNull: false
+
+  }
 }, {sequelize: db, modelName: 'lagoMallData'});
 
 module.exports = LagoMallData;

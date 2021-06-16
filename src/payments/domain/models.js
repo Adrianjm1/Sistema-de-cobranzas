@@ -19,12 +19,13 @@ Payment.init({
   },
   bank: {
     type: DataTypes.STRING(30),
-    defaultValue: ''
+    defaultValue: '',
+    allowNull: false
   },
   date: {
     type: DataTypes.DATE,
-/*     defaultValue: 0
- */  }
+// defaultValue: 0
+    allowNull: false  }
 }, {sequelize: db, modelName: 'payments'});
 
 module.exports = Payment;

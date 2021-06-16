@@ -1,6 +1,8 @@
 const Local = require('../domain')
 const Owner = require('../../owner/domain/model')
-const { Id, Schema } = require('../validations')
+const { Id, Schema } = require('../validations');
+const LagoMallData = require('../../lagomalldata/domain/models');
+const { Sequelize } = require('../../database/domain');
 
 async function getAll(req, res){
   try {
@@ -23,6 +25,21 @@ async function getTable(req, res){
     res.status(400).send({error: e.message})
   }
 }
+
+async function getTableMonthly(req, res){
+  try {
+      const data = await Local.all({
+      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD'],
+      include: [{ model: Owner, attributes: ['firstName', 'lastName'] }],
+      include: [{ model: LagoMallData, attributes: ['discount', [Sequelize.literal('monthlyUSD - (monthlyUSD * (discount/100))'), 'MontoProntopago']] }]
+                    
+    });
+    res.send(data)
+  } catch (e) {
+    res.status(400).send({error: e.message})
+  }
+}
+
 
 async function getOne(req, res){
   try {
@@ -50,5 +67,6 @@ module.exports = {
   getAll,
   getOne,
   make,
-  getTable
+  getTable,
+  getTableMonthly
 }

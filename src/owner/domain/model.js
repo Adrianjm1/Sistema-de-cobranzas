@@ -19,11 +19,13 @@ Owner.init({
   },
   nationalID: {
     type: DataTypes.STRING(12),
-    defaultValue: ''
+    defaultValue: '',
+    allowNull: false
   },
   phone:{
     type: DataTypes.STRING(20),
-    defaultValue: ''
+    defaultValue: '',
+    allowNull: false
   }
 
 

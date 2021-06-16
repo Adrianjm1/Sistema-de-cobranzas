@@ -9,6 +9,10 @@ Local.init({
     autoIncrement: true,
     allowNull: false
   },
+  code:{
+    type: DataTypes.STRING(30),
+    allowNull: false
+  },
   name: {
     type: DataTypes.STRING(30),
     allowNull: false
@@ -19,11 +23,13 @@ Local.init({
   },
   monthlyUSD: {
     type: DataTypes.DECIMAL(8,2),
-    defaultValue: 0
+    defaultValue: 0,
+    allowNull: false
   },
   balance: {
     type: DataTypes.DECIMAL(8,2),
-    defaultValue: 0
+    defaultValue: 0,
+    allowNull: false
   }
 }, {sequelize: db, modelName: 'locales'});
 
