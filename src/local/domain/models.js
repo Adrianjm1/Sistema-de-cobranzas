@@ -1,5 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const db = require('../../database/domain')
+const { Sequelize } = require('../../database/domain');
+
 
 class Local extends Model {}
 Local.init({
@@ -36,6 +38,8 @@ Local.init({
     defaultValue: 0,
     allowNull: false
   }
-}, {sequelize: db, modelName: 'locales'});
+} ,{sequelize: db, modelName: 'locales'});
+
+
 
 module.exports = Local;

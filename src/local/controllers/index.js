@@ -28,28 +28,44 @@ async function getTable(req, res){
 
 async function getTableMonthly(req, res){
   try {
+
       const data = await Local.all({
       attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD'],
-      include: [{ model: LagoMallData, attributes: ['discount', [Sequelize.literal('monthlyUSD - (monthlyUSD * (discount/100))'), 'MontoProntopago']] }, { model: Owner, attributes: ['firstName', 'lastName'] }],
-/*       include: [{ model: Owner, attributes: ['firstName', 'lastName'] }]
- */                    
-    });
+      include: [{ model: LagoMallData, attributes: ['discount', [Sequelize.literal('monthlyUSD - (monthlyUSD * (discount/100))'), 'MontoProntopago']] }, { model: Owner, attributes: ['firstName', 'lastName'] }],        
+      });
 
 
+      res.send(data)
 
-
-    res.send(data)
   } catch (e) {
     res.status(400).send({error: e.message})
   }
 }
 
 
+async function updatePP(req, res){
+
+  
+    try {
+      const monthlyUSD = Local.monthlyUSD;
+      const discount = req.params.discount;
+
+      const data = await Local.updatePronto( {prontoPago:20 });
+      console.log(monthlyUSD, discount);
+      res.send(data)
+    } catch (e) {
+      res.status(400).send({error: e.message})
+    }
+  }
+  
+
+
+
 async function getOne(req, res){
   try {
     const { id } = await Id.validateAsync(req.params);
     const data = await Local.single({
-      where: {age: id}
+      where: {id: id}
     });
     res.send(data)
   } catch (e) {
@@ -72,5 +88,7 @@ module.exports = {
   getOne,
   make,
   getTable,
-  getTableMonthly
+  getTableMonthly,
+  updatePP,
+  
 }
