@@ -30,9 +30,9 @@ async function getTableMonthly(req, res){
   try {
       const data = await Local.all({
       attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD'],
-      include: [{ model: Owner, attributes: ['firstName', 'lastName'] }],
-      include: [{ model: LagoMallData, attributes: ['discount', [Sequelize.literal('monthlyUSD - (monthlyUSD * (discount/100))'), 'MontoProntopago']] }]
-                    
+      include: [{ model: LagoMallData, attributes: ['discount', [Sequelize.literal('monthlyUSD - (monthlyUSD * (discount/100))'), 'MontoProntopago']] }, { model: Owner, attributes: ['firstName', 'lastName'] }],
+/*       include: [{ model: Owner, attributes: ['firstName', 'lastName'] }]
+ */                    
     });
     res.send(data)
   } catch (e) {
