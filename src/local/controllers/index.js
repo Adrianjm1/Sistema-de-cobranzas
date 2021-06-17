@@ -55,7 +55,7 @@ async function updatePP(req, res){
       const discount = req.body.discount;
 
       const data = await Local.all({
-        attributes: ['monthlyUSD', 'id', 'prontoPago']
+        attributes: ['monthlyUSD', 'code', 'prontoPago']
       });
 
       data.map(datos => {
@@ -66,10 +66,7 @@ async function updatePP(req, res){
 
       for(let i=0; i<data.length; i++){
 
-        updatedData = await Local.updatePronto( {prontoPago: data[i].prontoPago }, {where: {id: (i+1)}});
-        console.log(data[i].prontoPago)
-        console.log(i+1);
-        console.log('\n');
+        updatedData = await Local.updatePronto( {prontoPago: data[i].prontoPago }, {where: {code: data[i].code}});
 
       }
 
