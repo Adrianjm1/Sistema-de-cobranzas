@@ -31,9 +31,14 @@ async function getTableMonthly(req, res){
 
       const data = await Local.all({
       attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD'],
-      include: [{ model: LagoMallData, attributes: ['discount', [Sequelize.literal('monthlyUSD - (monthlyUSD * (discount/100))'), 'MontoProntopago']] }, { model: Owner, attributes: ['firstName', 'lastName'] }],        
+      include: [{ model: LagoMallData, attributes: ['discount', [Sequelize.literal('monthlyUSD - (monthlyUSD * (discount/100))'), 'prontoPago']] }, { model: Owner, attributes: ['firstName', 'lastName'] }],        
       });
 
+      data[1].lagoMallDatum.discount = 1000;
+      data[1].lagoMallDatum.prontoPago = "10";
+
+/*       data.update({prontoPago:2}, {where: {id: 2}});
+ */
 
       res.send(data)
 
@@ -45,21 +50,37 @@ async function getTableMonthly(req, res){
 
 async function updatePP(req, res){
 
-  
     try {
-      const monthlyUSD = Local.monthlyUSD;
-      const discount = req.params.discount;
 
-      const data = await Local.updatePronto( {prontoPago:20 });
-      console.log(monthlyUSD, discount);
-      res.send(data)
+      const discount = req.body.discount;
+
+      const data = await Local.all({
+        attributes: ['monthlyUSD', 'id', 'prontoPago']
+      });
+
+      data.map(datos => {
+        datos.prontoPago = (datos.monthlyUSD - (datos.monthlyUSD * (discount/100))).toFixed(2);
+      })
+
+      let updatedData = [];
+
+      for(let i=0; i<data.length; i++){
+
+        updatedData = await Local.updatePronto( {prontoPago: data[i].prontoPago }, {where: {id: (i+1)}});
+        console.log(data[i].prontoPago)
+        console.log(i+1);
+        console.log('\n');
+
+      }
+
+      res.send(data);
+
     } catch (e) {
       res.status(400).send({error: e.message})
     }
+
   }
   
-
-
 
 async function getOne(req, res){
   try {
