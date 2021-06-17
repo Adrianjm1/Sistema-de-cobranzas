@@ -26,6 +26,11 @@ Local.init({
     defaultValue: 0,
     allowNull: false
   },
+  prontoPago: {
+    type: DataTypes.DECIMAL(8,2),
+    defaultValue: 0,
+    allowNull: false
+  },
   balance: {
     type: DataTypes.DECIMAL(8,2),
     defaultValue: 0,

@@ -11,8 +11,13 @@ function create(attr){
   return Local.create(attr)
 }
 
+function update(attr) {
+  return Local.update(attr)
+  
+}
 module.exports = {
   single,
   all,
-  create
+  create,
+  update
 }
