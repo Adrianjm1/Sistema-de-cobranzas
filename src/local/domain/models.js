@@ -40,6 +40,4 @@ Local.init({
   }
 } ,{sequelize: db, modelName: 'locales'});
 
-
-
 module.exports = Local;

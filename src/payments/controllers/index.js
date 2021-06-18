@@ -3,7 +3,9 @@ const { Id, Schema } = require('../validations')
 
 async function getAll(req, res){
   try {
-    const data = await Payments.all();
+    const data = await Payments.all({
+      //attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD'],
+    });
     res.send(data)
   } catch (e) {
     res.status(400).send({error: e.message})

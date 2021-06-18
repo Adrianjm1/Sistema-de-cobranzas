@@ -7,6 +7,7 @@ const { Sequelize } = require('../../database/domain');
 async function getAll(req, res){
   try {
     const data = await Local.all();
+    console.log(data['monthlyUSD'][0]);
     res.send(data)
   } catch (e) {
     res.status(400).send({error: e.message})
@@ -34,6 +35,7 @@ async function getTableMonthly(req, res){
       include: [{ model: LagoMallData, attributes: ['discount', [Sequelize.literal('monthlyUSD - (monthlyUSD * (discount/100))'), 'MontoProntopago']] }, { model: Owner, attributes: ['firstName', 'lastName'] }],        
       });
 
+      console.log(data);
 
       res.send(data)
 
@@ -50,8 +52,8 @@ async function updatePP(req, res){
       const monthlyUSD = Local.monthlyUSD;
       const discount = req.params.discount;
 
-      const data = await Local.updatePronto( {prontoPago:20 });
-      console.log(monthlyUSD, discount);
+      const data = await Local.updatePronto( {prontoPago:50 });
+      console.log(data['monthlyUSD']);
       res.send(data)
     } catch (e) {
       res.status(400).send({error: e.message})
