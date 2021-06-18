@@ -1,4 +1,7 @@
-const Local = require('./models')
+const Local = require('./models');
+
+const { Op } = require("sequelize");
+
 function single(attr) {
   return Local.findOne(attr)
 }
@@ -11,8 +14,9 @@ function create(attr){
   return Local.create(attr)
 }
 
-function updatePronto(attr) {
-  return Local.update(attr, {where: {prontoPago: 0}})
+function updatePronto(attr,where) {
+
+  return Local.update(attr, where);
   
 }
 module.exports = {
