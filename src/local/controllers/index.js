@@ -31,8 +31,8 @@ async function getTableMonthly(req, res){
   try {
 
       const data = await Local.all({
-      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD'],
-      include: [{ model: LagoMallData, attributes: ['discount', [Sequelize.literal('monthlyUSD - (monthlyUSD * (discount/100))'), 'prontoPago']] }, { model: Owner, attributes: ['firstName', 'lastName'] }],        
+      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago'],
+      include: [{ model: LagoMallData, attributes: ['discount'] }, { model: Owner, attributes: ['firstName', 'lastName'] }],        
       });
 
       data[1].lagoMallDatum.discount = 1000;
@@ -49,27 +49,58 @@ async function getTableMonthly(req, res){
 }
 
 
-async function updatePP(req, res){
+async function updateTable(req, res){
 
     try {
 
-      const discount = req.body.discount;
+      // DIA DEL MES PARA DIFERENCIAR ENTRE COBRAR PRONTO PAGO Y MONTO COMPLETP (A DISCUSION)
+      let updatedData = [];
+      let date= new Date();
+      let day = date.getDate();
 
       const data = await Local.all({
-        attributes: ['monthlyUSD', 'code', 'prontoPago']
+        attributes: ['monthlyUSD', 'code', 'prontoPago', 'percentageOfCC', 'balance'],
+
       });
 
+      const LGdata = await LagoMallData.findAll({
+        attributes: ['breakeven', 'meter','discount']
+      });
+      
+      let condominio = (LGdata[0].breakeven * LGdata[0].meter);  // MONTO DEL CONDOMINIO
+      let discount = LGdata[0].discount;
+      
+      
+
       data.map(datos => {
+        datos.monthlyUSD = (datos.percentageOfCC * condominio).toFixed(2);  //CALCULO DE CUOTA MENSUAL
+        datos.monthlyUSD = Math.round( datos.monthlyUSD);               //REDONDEAR LOS DATOS ANTES DE REALIZAR EL UPDATE
         datos.prontoPago = (datos.monthlyUSD - (datos.monthlyUSD * (discount/100))).toFixed(2);
-      })
+        datos.prontoPago = Math.round( datos.prontoPago);               
+        
 
-      let updatedData = [];
+        if (day < 12){          //SI EL DIA ES MENOR AL ESTABLECIDO, ENTONCES COBRAR PRONTOPAGO, SINO, MONTO COMPLETO
 
-      for(let i=0; i<data.length; i++){
+          datos.balance = datos.balance - datos.prontoPago;
 
-        updatedData = await Local.updatePronto( {prontoPago: data[i].prontoPago }, {where: {code: data[i].code}});
+          for(let i=0; i<data.length; i++){
+            updatedData =  Local.updateTab( {monthlyUSD: data[i].monthlyUSD }, {where: {code: data[i].code}});  
+            updatedData =  Local.updateTab( {prontoPago: data[i].prontoPago, balance: data[i].balance }, {where: {code: data[i].code}});     
+          }
 
-      }
+        } else {
+
+          datos.balance = datos.balance - datos.monthlyUSD
+
+          for(let i=0; i<data.length; i++){
+            updatedData =  Local.updateTab( {monthlyUSD: data[i].monthlyUSD, balance: data[i].balance  }, {where: {code: data[i].code}});  
+            updatedData =  Local.updateTab( {prontoPago: data[i].prontoPago}, {where: {code: data[i].code}});     
+          }
+
+        }
+        
+
+      });
 
       res.send(data);
 
@@ -78,6 +109,10 @@ async function updatePP(req, res){
     }
 
   }
+
+
+
+  
   
 
 async function getOne(req, res){
@@ -108,6 +143,6 @@ module.exports = {
   make,
   getTable,
   getTableMonthly,
-  updatePP,
+  updateTable,
   
 }
