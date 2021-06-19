@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize');
-const db = require('../../database/domain')
+const db = require('../../database/domain');
 
 class Payment extends Model {}
 Payment.init({
@@ -24,7 +24,7 @@ Payment.init({
   },
   date: {
     type: DataTypes.DATE,
-// defaultValue: 0
+    defaultValue: DataTypes.NOW,
     allowNull: false  }
 }, {sequelize: db, modelName: 'payments'});
 

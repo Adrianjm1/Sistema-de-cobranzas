@@ -4,8 +4,8 @@ function single(attr) {
   return Payments.findOne(attr)
 }
 
-function all(attr) {
-  return Payments.findAll(attr)
+function allPaymentsByLocal(attr) {
+  return Payments.findAll(attr);
 }
 
 function create(attr){
@@ -14,6 +14,6 @@ function create(attr){
 
 module.exports = {
   single,
-  all,
-  create
+  create,
+  allPaymentsByLocal
 }

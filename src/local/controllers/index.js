@@ -1,7 +1,7 @@
 const Local = require('../domain')
-const Owner = require('../../owner/domain/model')
+const Owner = require('../../owner/domain')
 const { Id, Schema } = require('../validations');
-const LagoMallData = require('../../lagomalldata/domain/models');
+const LagoMallData = require('../../lagomalldata/domain');
 const { Sequelize } = require('../../database/domain');
 
 async function getAll(req, res){
