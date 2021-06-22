@@ -1,20 +1,23 @@
 const Payments = require('../domain');
 const Local = require('../../local/domain/models');
+const Exchange = require('../../exchangeRate/domain/model');
 const LocalFunctions = require('../../local/domain');
-const Exchange = require('../../exchangeRate/domain');
 const { Id, Schema, Pay } = require('../validations');
+const { Sequelize } = require('../../database/domain');
 
 
 async function getPaymentsByLocal(req, res){    // SE REQUIEREN LOS PAGOS POR LOCAL
   try {
 
-    let idLocal = req.params.id;
+    let code = req.params.code;
+
 
       const data = await Payments.allPaymentsByLocal({
-        attributes: ['amountUSD', 'referenceNumber', 'bank', 'date', 'idLocal'],
-        include: [{ model: Local, attributes: ['name', 'code'] }],
-        where: {idLocal}});
+        attributes: ['amountUSD', 'referenceNumber', 'bank', 'date', [Sequelize.literal('(price * amountUSD)'), 'AmountBs'], 'idLocal'],
+        include: [{ model: Exchange, attributes: ['price'] },{ model: Local, attributes: ['name', 'code'],where:{code} } ],
 
+        });
+        console.log(code);
     res.send(data)
 
 

@@ -3,6 +3,6 @@ const Controller = require('./index.js');
 
 Router.get('/', Controller.getAll)
 Router.get('/make', Controller.make)
-Router.get('/:id', Controller.getOne)
+Router.get('/:date', Controller.getAllByDay)
 
 module.exports = Router

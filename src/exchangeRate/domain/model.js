@@ -13,11 +13,6 @@ Exchange.init({
     type: DataTypes.DECIMAL(10,2),
     allowNull: false
   },
-  date: {
-    type: DataTypes.DATE,
-    allowNull: false
-/*     defaultValue: ''
- */  }
 }, {sequelize: db, modelName: 'exchanges'});
 
 module.exports = Exchange;

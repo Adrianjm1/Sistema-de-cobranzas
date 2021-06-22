@@ -4,7 +4,7 @@ const Controller = require('./index.js');
 
 Router.post('/make', Controller.make);
 
-Router.get('/:id', Controller.getPaymentsByLocal);
+Router.get('/:code', Controller.getPaymentsByLocal);
 
 
 module.exports = Router;

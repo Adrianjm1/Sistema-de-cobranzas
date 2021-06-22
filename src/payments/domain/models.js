@@ -22,10 +22,6 @@ Payment.init({
     defaultValue: '',
     allowNull: false
   },
-  date: {
-    type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    allowNull: false  }
 }, {sequelize: db, modelName: 'payments'});
 
 module.exports = Payment;
