@@ -11,6 +11,8 @@ module.exports.Pay = Joi.object({
   amountUSD: Joi.string().alphanum().max(30).trim().required(),
   referenceNumber: Joi.string().min(1).max(30).trim().required(),
   code: Joi.string().min(1).max(30).trim().required(),
+  exchangeRate: Joi.string().max(30).trim().required(),
+  paymentUSD: Joi.boolean().required(),
 });
 
 

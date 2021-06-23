@@ -22,6 +22,16 @@ Payment.init({
     defaultValue: '',
     allowNull: false
   },
+  exchangeRate: {
+    type: DataTypes.DECIMAL(20,3),
+    defaultValue: 0,
+    allowNull: false
+  },
+  paymentUSD: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: true,
+    allowNull: false
+  }
 }, {sequelize: db, modelName: 'payments'});
 
 module.exports = Payment;
