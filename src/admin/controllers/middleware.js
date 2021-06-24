@@ -24,7 +24,7 @@ let validToken = (req, res, next) => {
 
 
 
-let verificaAdmin_Role = (req, res, next) => {
+let verificaAdminMaster = (req, res, next) => {
 
     let usuario = req.usuario;
 

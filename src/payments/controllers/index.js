@@ -88,10 +88,6 @@ async function getAllPayments(req, res){
 }
 
 
-
-
-
-
 async function make(req, res){
   try {
 

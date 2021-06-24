@@ -2,7 +2,7 @@
 Vencimiento del token
 ======================= */
 
-process.env.CADUCIDAD_TOKEN = '48h';
+process.env.CADUCIDAD_TOKEN = '5h';
 
 /* ====================
 SEED de Autenticación

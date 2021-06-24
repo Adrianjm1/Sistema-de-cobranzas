@@ -36,9 +36,18 @@ async function getTableMonthly(req, res){
   try {
 
       const data = await Local.all({
-      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago'],
+      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago', 'idLGData'],
       include: [{ model: LagoMallData, attributes: ['discount', 'month'], where:{month: req.body.month } }, { model: Owner, attributes: ['firstName', 'lastName'] }],        
       });
+
+
+      const dataLagoMall = LMDFunctions.one({
+        attributes: ['breakeven', 'discount'],
+        where: {month: body.month}
+
+      });
+
+
 
 
       res.send(data)

@@ -5,6 +5,11 @@ function all(attr) {
   return Lagomalldata.findAll(attr)
 }
 
+function one(attr) {
+  return Lagomalldata.findOne(attr)
+}
+
+
 function updateBE(attr, where) {
   return Lagomalldata.update(attr, where)
 }
