@@ -104,6 +104,7 @@ async function make(req, res){
     data.balance = parseFloat(data.balance) + parseFloat(body.amountUSD);
 
     body.idLocal = data.id;
+    body.idAdmin = req.usuario.id;
      
     const save = await Payments.create(body);
     const balanceUpdated = await LocalFunctions.updateTab({balance: data.balance},{where: {id: data.id}});
@@ -122,6 +123,8 @@ async function updatePayment(req, res){
     const reference = req.params.reference;
 
     const body = await Pay.validateAsync(req.body);
+
+    body.idAdmin = req.usuario.id;
 
     const data = await Payments.updatePay(body,{where: {referenceNumber: reference}});
 

@@ -17,6 +17,10 @@ Local.belongsTo(LagoMallData, {foreignKey: 'idLGData'});
 Local.hasMany(Payments, {foreignKey: 'idLocal'});
 Payments.belongsTo(Local,  {foreignKey: 'idLocal'});
 
+// Payments - Admin: One to Many
+Admin.hasMany(Payments, {foreignKey: 'idAdmin'});
+Payments.belongsTo(Admin,  {foreignKey: 'idAdmin'});
+
 // Admin - Local: One to Many
 Admin.hasMany(Local, {foreignKey: 'idAdmin'});
 Local.belongsTo(Admin, {foreignKey: 'idAdmin'});

@@ -1,7 +1,8 @@
-const bodyParser = require('body-parser')
-const express = require('express')
+require('./src/config/config');
+const express = require('express');
 const app = express();
-const db = require('./src/database/controller/index')
+const db = require('./src/database/controller/index');
+const bodyParser = require('body-parser');
 
 // Configuración del servidor
 app.set('PORT', 5000)

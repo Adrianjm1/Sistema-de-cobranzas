@@ -1,5 +1,6 @@
-const Admin = require('../domain')
-const { Id, Schema, Username } = require('../validations')
+const Admin = require('../domain');
+const jwt = require('jsonwebtoken');
+const { Id, Schema, Username } = require('../validations');
 
 async function getAll(req, res){
   try {
@@ -54,7 +55,15 @@ async function login(req, res){
       })
     }
 
-    res.send(data)
+    let token = jwt.sign({
+      usuario: data
+    }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
+
+    res.send({
+      ok: true,
+      usuario: data,
+      token
+    });
 
   } catch (e) {
     res.status(400).send({error: e.message})

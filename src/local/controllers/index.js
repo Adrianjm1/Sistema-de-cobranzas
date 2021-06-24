@@ -1,13 +1,14 @@
-const Local = require('../domain')
-const Owner = require('../../owner/domain')
+const Local = require('../domain/index');
+const Owner = require('../../owner/domain/model');
 const { Id, Schema } = require('../validations');
-const LagoMallData = require('../../lagomalldata/domain');
+const LagoMallData = require('../../lagomalldata/domain/models');
+const LMDFunctions = require('../../lagomalldata/domain/index');
 const { Sequelize } = require('../../database/domain');
 
 async function getAll(req, res){
   try {
-    const data = await Local.all();
-    console.log(data['monthlyUSD'][0]);
+    const data = await Local.all({attributes: ['name', 'percentageOfCC', 'monthlyUSD', 'balance']});
+    console.log(data);
     res.send(data)
   } catch (e) {
     res.status(400).send({error: e.message})
@@ -63,7 +64,7 @@ async function updateTable(req, res){
 
       });
 
-      const LGdata = await LagoMallData.findAll({
+      const LGdata = await LMDFunctions.all({
         attributes: ['breakeven', 'meter','discount']
       });
       
