@@ -1,5 +1,5 @@
 const Lagomalldata = require('../domain')
-const { Id, Schema } = require('../validations')
+const { Id, Schema, BreakE } = require('../validations')
 const { Sequelize } = require('sequelize');
 
 
@@ -12,6 +12,24 @@ async function getAll(req, res){
   }
 }
 
+
+async function updateBreakeven(req, res){
+
+  const id = req.params.id;
+  const body = BreakE.validateAsync(req.body);
+
+
+  try {
+    const data = await Lagomalldata.updateBE( {breakeven: req.body.breakeven}, {where:{id: id}} );
+    res.send(data)
+  } catch (e) {
+    res.status(400).send({error: e.message})
+  }
+}
+// updatedData =  Local.updateTab( {prontoPago: data[i].prontoPago}, {where: {code: data[i].code}});    
+ 
+
 module.exports = {
-  getAll
+  getAll,
+  updateBreakeven
 }
