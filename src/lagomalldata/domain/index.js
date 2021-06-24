@@ -11,8 +11,16 @@ function updateBE(attr, where) {
 
 
 
+function make(attr) {
+  return Lagomalldata.create(attr)
+}
+
+
+
+
 module.exports = {
   all,
-  updateBE
+  updateBE,
+  make
 
 }

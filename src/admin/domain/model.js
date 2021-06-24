@@ -14,7 +14,7 @@ Admin.init({
     allowNull: false
   },
   password: {
-    type: DataTypes.STRING(30),
+    type: DataTypes.STRING(60),
     allowNull: false
   },
 }, {sequelize: db, modelName: 'admins'});

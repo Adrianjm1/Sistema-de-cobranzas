@@ -29,18 +29,17 @@ async function getTable(req, res){
 }
 
 async function getTableMonthly(req, res){
+
+
+  const body = req.body;
+
   try {
 
       const data = await Local.all({
       attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago'],
-      include: [{ model: LagoMallData, attributes: ['discount'] }, { model: Owner, attributes: ['firstName', 'lastName'] }],        
+      include: [{ model: LagoMallData, attributes: ['discount', 'month'], where:{month: req.body.month } }, { model: Owner, attributes: ['firstName', 'lastName'] }],        
       });
 
-      data[1].lagoMallDatum.discount = 1000;
-      data[1].lagoMallDatum.prontoPago = "10";
-
-/*       data.update({prontoPago:2}, {where: {id: 2}});
- */
 
       res.send(data)
 

@@ -1,3 +1,4 @@
+const md5 = require('md5')
 const Admin = require('../domain');
 const jwt = require('jsonwebtoken');
 const { Id, Schema, Username } = require('../validations');
@@ -37,10 +38,13 @@ async function login(req, res){
 
   try {
     const { username, password } = await Username.validateAsync(req.body);
+
+    const passwordHash = md5(password);
+    console.log(password);
     const data = await Admin.single({
       where: {username}
     });
-
+    
     if(!data){
       return res.send({
         ok: false,
@@ -48,7 +52,7 @@ async function login(req, res){
       })
     }
 
-    if(password !== data.password){
+    if(passwordHash !== data.password){
       return res.send({
         ok: false,
         resp: 'Usuario o (contraseña) incorrectos'      //Se colocan los parentesis de muestra, pero se deben quitar
