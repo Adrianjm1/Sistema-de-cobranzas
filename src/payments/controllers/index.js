@@ -1,6 +1,8 @@
 const Payments = require('../domain');
 const Local = require('../../local/domain/models');
 const LocalFunctions = require('../../local/domain');
+const Admin = require('../../admin/domain/model');
+const AdminFunctions = require('../../admin/domain');
 const { Id, Schema, Pay } = require('../validations');
 const { Sequelize } = require('../../database/domain');
 
@@ -12,11 +14,17 @@ async function getPaymentsByLocal(req, res){    // SE REQUIEREN LOS PAGOS POR LO
 
 
       const data = await Payments.allPaymentsByLocal({
-        attributes: ['amountUSD', 'referenceNumber', 'bank', 'createdAt', 'exchangeRate', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS'], 'idLocal'],
-        include: [{ model: Local, attributes: ['name', 'code'],where:{code} } ],
+        attributes: ['amountUSD', 'referenceNumber', 'bank', 'createdAt', 'exchangeRate', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+        include: [{model: Admin, attributes: ['username']},{ model: Local, attributes: ['name', 'code'], where:{code}}],
 
       });
-        
+
+/*       const admin = await Admin.all({
+        attributes: ['username'],
+        where: {data.idAdmin},
+      }); */
+      
+      
       res.send(data);
 
 
