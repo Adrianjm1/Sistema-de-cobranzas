@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('@hapi/joi').extend(require('@joi/date'));
 
 module.exports.Schema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).trim().required(),
@@ -9,3 +9,14 @@ module.exports.Schema = Joi.object({
 module.exports.Id = Joi.object({
   id: Joi.number().min(1).required()
 })
+
+module.exports.Month = Joi.object({
+  month: Joi.date().format('YYYY-MM').required()
+})
+
+
+module.exports.Pronto = Joi.object({
+  diaProntoPago: Joi.number().min(1).max(30).required(),
+  month: Joi.date().format('YYYY-MM').required()
+})
+
