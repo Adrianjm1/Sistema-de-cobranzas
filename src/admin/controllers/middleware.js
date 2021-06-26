@@ -10,6 +10,7 @@ let validToken = (req, res, next) => {
             return res.status(401).json({
                 ok: false,
                 err: {
+                    ok: false,
                     message: 'Token no valido'
                 }
             })
@@ -36,7 +37,8 @@ let verificaAdminMaster = (req, res, next) => {
         return res.send({
             ok: false,
             err: {
-                message: 'El usuario no es Administrador'
+                ok: false,
+                message: 'El usuario no es Master'
             }
         })
 
@@ -46,5 +48,6 @@ let verificaAdminMaster = (req, res, next) => {
 
 
 module.exports = {
-    validToken
+    validToken,
+    verificaAdminMaster
 }

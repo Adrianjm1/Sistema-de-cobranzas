@@ -1,10 +1,11 @@
 const Router = require('express').Router();
 const Controller = require('./index.js');
-const {validToken} = require('../../admin/controllers/middleware')
+const {validToken, verificaAdminMaster} = require('../../admin/controllers/middleware')
 
 Router.get('/table', validToken, Controller.getTableMonthly);
 Router.post('/make', validToken, Controller.make);
-Router.patch('/up', validToken, Controller.updateTable);
+Router.put('/up/:code', [validToken, verificaAdminMaster], Controller.updateBalance);
+Router.patch('/up', [validToken, verificaAdminMaster], Controller.updateTable);
 
 /* Router.get('/:id', validToken, Controller.getAll);
  */

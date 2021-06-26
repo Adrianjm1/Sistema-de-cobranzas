@@ -34,6 +34,18 @@ async function make(req, res){
   }
 }
 
+async function signUp(req, res){
+  try {
+    const body = await Schema.validateAsync(req.body);
+    body.password = md5(body.password);
+
+    const data = await Admin.create(body);
+    res.send(data)
+  } catch (e) {
+    res.status(400).send({error: e.message})
+  }
+}
+
 async function login(req, res){
 
   try {
@@ -59,6 +71,8 @@ async function login(req, res){
       })
     }
 
+    data.password = null;
+
     let token = jwt.sign({
       usuario: data
     }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
@@ -80,6 +94,6 @@ async function login(req, res){
 module.exports = {
   getAll,
   getOne,
-  make,
+  signUp,
   login
 }

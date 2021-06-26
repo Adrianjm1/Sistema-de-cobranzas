@@ -67,6 +67,27 @@ async function getTableMonthly(req, res){
 }
 
 
+async function updateBalance(req, res){
+
+  try {
+
+    const code = req.params.code;
+    const balance = req.body.balance;
+  
+    const data =  Local.updateTab( {balance}, {where: {code}});  
+
+    res.send(data);
+
+    
+
+  } catch (e) {
+    res.status(400).send({error: e.message})
+  }
+
+}
+
+
+
 async function updateTable(req, res){
 
     try {
@@ -182,5 +203,6 @@ module.exports = {
   make,
   getTableMonthly,
   updateTable,
+  updateBalance
   
 }
