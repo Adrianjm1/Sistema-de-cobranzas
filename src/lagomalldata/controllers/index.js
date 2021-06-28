@@ -15,8 +15,8 @@ async function getAll(req, res){
 
 async function updateBreakeven(req, res){
 
-  const id = req.params.id;
-  const body = BreakE.validateAsync(req.body);
+  const { id } = await Id.validateAsync(req.params);
+  const { breakeven } = await BreakE.validateAsync(req.body);
 
 
   try {
