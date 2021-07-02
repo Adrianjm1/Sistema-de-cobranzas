@@ -6,28 +6,18 @@ const LagoMallData = require('../../lagomalldata/domain/models');
 const LMDFunctions = require('../../lagomalldata/domain/index');
 const { Sequelize } = require('../../database/domain');
 
-async function getAll(req, res){
+async function getTable(req, res){
   try {
-    const data = await Local.all({attributes: ['name', 'percentageOfCC', 'monthlyUSD', 'balance']});
-    console.log(data);
+      const data = await Local.all({
+      attributes: ['name', 'percentageOfCC', 'monthlyUSD', 'balance'],
+      include: [{ model: Owner, attributes: ['firstName', 'lastName'] }]
+                    
+    });
     res.send(data)
   } catch (e) {
-    res.status(400).send({error: e.message})
+     res.status(400).send({error: e.message})
   }
 }
-
-// async function getTable(req, res){
-//   try {
-//       const data = await Local.all({
-//       attributes: ['name', 'percentageOfCC', 'monthlyUSD', 'balance'],
-//       include: [{ model: Owner, attributes: ['firstName', 'lastName'] }]
-                    
-//     });
-//     res.send(data)
-//   } catch (e) {
-//     res.status(400).send({error: e.message})
-//   }
-// }
 
 async function getTableMonthly(req, res){
 
@@ -198,7 +188,7 @@ async function make(req, res){
 }
 
 module.exports = {
-  getAll,
+  getTable,
   getOne,
   make,
   getTableMonthly,
