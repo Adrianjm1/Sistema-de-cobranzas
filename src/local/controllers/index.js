@@ -9,7 +9,7 @@ const { Sequelize } = require('../../database/domain');
 async function getTable(req, res){
   try {
       const data = await Local.all({
-      attributes: ['name', 'percentageOfCC', 'monthlyUSD', 'balance'],
+      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'balance'],
       include: [{ model: Owner, attributes: ['firstName', 'lastName'] }]
                     
     });
