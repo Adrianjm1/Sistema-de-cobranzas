@@ -60,14 +60,14 @@ async function login(req, res){
     if(!data){
       return res.send({
         ok: false,
-        resp: '(Usuario) o contraseña incorrectos'    //Se colocan los parentesis de muestra, pero se deben quitar
+        resp: 'Usuario o contraseña incorrectos'    //Se colocan los parentesis de muestra, pero se deben quitar
       })
     }
 
     if(passwordHash !== data.password){
       return res.send({
         ok: false,
-        resp: 'Usuario o (contraseña) incorrectos'      //Se colocan los parentesis de muestra, pero se deben quitar
+        resp: 'Usuario o contraseña incorrectos'      //Se colocan los parentesis de muestra, pero se deben quitar
       })
     }
 
