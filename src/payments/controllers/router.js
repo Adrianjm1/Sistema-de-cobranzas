@@ -11,6 +11,8 @@ Router.delete('/de/:reference', validToken, Controller.deletePayment);
 
 Router.get('/:code', validToken, Controller.getPaymentsByLocal);
 
+Router.get('/get/month/:mes', validToken, Controller.getPaymentsByMonth);
+
 Router.patch('/suma', validToken, Controller.getAllPayments);
 
 
