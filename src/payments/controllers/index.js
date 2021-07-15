@@ -52,8 +52,9 @@ async function getPaymentsByMonth(req, res){
       let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
       let contador = 1;
 
-      const year = month.slice(3,7);
-      month = month.slice(0,2);
+      const day = month.slice(0,2);
+      const year = month.slice(6,10);
+      month = month.slice(3,5);
 
       months.map(item => {
         if(parseInt(month) == contador){
@@ -66,7 +67,7 @@ async function getPaymentsByMonth(req, res){
 
       data.map(item => {
 
-        if(item.createdAt.toString().slice(4,7) === month && item.createdAt.toString().slice(11,15) === year){
+        if((item.createdAt.toString().slice(4,7) === month) && (item.createdAt.toString().slice(11,15) === year) && (item.createdAt.toString().slice(8,10) === day)){
           
           pagos.push(item);
 
