@@ -87,6 +87,59 @@ async function getPaymentsByMonth(req, res){
 
 
 
+async function getPaymentsMonthly(req, res){  
+  try {
+
+      let month = req.params.mes;
+
+      const data = await Payments.allPaymentsByLocal({
+        attributes: ['id','amountUSD', 'referenceNumber', 'bank', 'createdAt', 'exchangeRate', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+        include: [{model: Admin, attributes: ['username']},{ model: Local, attributes: ['code']}],
+        order: [
+          ['id', 'DESC'],
+        ]      
+      });
+
+      let months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      let contador = 1;
+
+      const year = month.slice(3,7);
+      month = month.slice(0,2);
+
+      console.log(month);
+      console.log(year);
+
+      months.map(item => {
+        if(parseInt(month) == contador){
+          month = item;
+        }
+        contador++;
+      });
+
+      let pagos = [];
+
+      data.map(item => {
+
+        if((item.createdAt.toString().slice(4,7) === month) && (item.createdAt.toString().slice(11,15) === year)){
+          
+          pagos.push(item);
+
+        }
+
+      });
+
+      res.send(pagos);
+
+
+
+  } catch (e) {
+    res.status(400).send({error: e.message})
+  }
+}
+
+
+
+
 async function getAllPayments(req, res){   
   try {
 
@@ -218,5 +271,6 @@ module.exports = {
   updatePayment,
   deletePayment,
   getAllPayments,
-  getPaymentsByMonth
+  getPaymentsByMonth,
+  getPaymentsMonthly
 }

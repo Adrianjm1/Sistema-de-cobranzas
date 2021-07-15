@@ -13,6 +13,8 @@ Router.get('/:code', validToken, Controller.getPaymentsByLocal);
 
 Router.get('/get/month/:mes', validToken, Controller.getPaymentsByMonth);
 
+Router.get('/get/monthly/:mes', validToken, Controller.getPaymentsMonthly);
+
 Router.patch('/suma', validToken, Controller.getAllPayments);
 
 
