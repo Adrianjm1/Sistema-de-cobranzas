@@ -11,11 +11,13 @@ Router.delete('/de/:reference', validToken, Controller.deletePayment);
 
 Router.get('/:code', validToken, Controller.getPaymentsByLocal);
 
-Router.get('/get/month/:mes', validToken, Controller.getPaymentsByMonth);
+Router.get('/get/dayly', validToken, Controller.getPaymentsDayly);
 
-Router.get('/get/monthly/:mes', validToken, Controller.getPaymentsMonthly);
+Router.get('/get/monthly', validToken, Controller.getPaymentsMonthly);
 
-Router.patch('/suma', validToken, Controller.getAllPayments);
+Router.get('/sum/monthly', validToken, Controller.getSumMonthlyPayments);
+
+Router.get('/sum/dayly', validToken, Controller.getSumDaylyPayments);
 
 
 module.exports = Router;
