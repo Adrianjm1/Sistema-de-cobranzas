@@ -192,9 +192,6 @@ async function getSumMonthlyPayments(req, res) {
 }
 
 
-
-
-
 async function getSumDaylyPayments(req, res) {
   try {
 
@@ -271,9 +268,53 @@ async function getSumDaylyPayments(req, res) {
 
 
 
+async function getSumPaymentsUSD(req, res) {
+  try {
+
+    let month = req.query.month;
+    let year = req.query.year;
+
+    Payments.allPaymentsByLocal({
+      attributes: ['amountUSD', 'createdAt', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      order: [
+        ['id', 'DESC'],
+      ]
+    }).then((resp) => {
+
+      let pagos = [];
+
+      for (let i = 0; i < resp.length; i++) {
+
+        if (((resp[i].createdAt.getMonth() + 1) == month) && (resp[i].createdAt.getFullYear() == year)) {
+
+          pagos.push(resp[i]);
+
+        }
+
+      }
+
+      let sumaUSD = 0;
+
+      pagos.map(datos => {
+
+          sumaUSD = sumaUSD + parseFloat(datos.amountUSD);
+      });
+
+      res.send({
+        total: `${sumaUSD}`
+
+      });
+
+    })
+      .catch((error) =>
+        console.log(error)
+      )
 
 
-
+  } catch (e) {
+    res.status(400).send({ error: e.message })
+  }
+}
 
 
 
@@ -358,4 +399,5 @@ module.exports = {
   getSumDaylyPayments,
   getPaymentsDayly,
   getPaymentsMonthly,
+  getSumPaymentsUSD
 }

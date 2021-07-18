@@ -19,5 +19,8 @@ Router.get('/sum/monthly', validToken, Controller.getSumMonthlyPayments);
 
 Router.get('/sum/dayly', validToken, Controller.getSumDaylyPayments);
 
+Router.get('/sum/usd', validToken, Controller.getSumPaymentsUSD);
+
+
 
 module.exports = Router;
