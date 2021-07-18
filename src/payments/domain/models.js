@@ -15,7 +15,7 @@ Payment.init({
   },
   referenceNumber: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   bank: {
     type: DataTypes.STRING(30),

@@ -7,7 +7,7 @@ module.exports.Schema = Joi.object({
 });
 
 module.exports.Pay = Joi.object({
-  bank: Joi.string().min(3).max(30).trim().required(),
+  bank: Joi.string().min(0).max(30).trim().required(),
   amountUSD: Joi.string().alphanum().max(30).trim().required(),
   referenceNumber: Joi.string().min(1).max(30).trim().required(),
   code: Joi.string().min(1).max(30).trim().required(),

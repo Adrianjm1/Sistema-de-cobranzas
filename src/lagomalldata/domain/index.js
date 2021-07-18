@@ -14,6 +14,10 @@ function updateBE(attr, where) {
   return Lagomalldata.update(attr, where)
 }
 
+function last (attr){
+  return Lagomalldata.findAll(attr)
+}
+
 
 
 function make(attr) {
@@ -26,6 +30,7 @@ function make(attr) {
 module.exports = {
   all,
   updateBE,
-  make
+  make,
+  last
 
 }
