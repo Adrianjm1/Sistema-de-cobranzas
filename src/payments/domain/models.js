@@ -31,7 +31,11 @@ Payment.init({
     type: DataTypes.BOOLEAN,
     defaultValue: true,
     allowNull: false
-  }
+  },
+  date: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  } 
 }, {sequelize: db, modelName: 'payments'});
 
 module.exports = Payment;
