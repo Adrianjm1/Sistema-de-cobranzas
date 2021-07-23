@@ -8,24 +8,43 @@ const { Sequelize } = require('../../database/domain');
 
 async function getTable(req, res) {
   try {
+    // let mesaux = new Date();
+
+
+    // let mes = mesaux.getFullYear() + '-' + (mesaux.getMonth() + 1)
+
+
+    // console.log(mes);
+
+
     const data = await Local.all({
-      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'balance','prontoPago' ] ,
+      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'balance', 'prontoPago'],
       include: [{ model: Owner, attributes: ['firstName', 'lastName'] }]
 
     });
 
 
+    // if ((mesaux.getDate()) < res.data.prontoPagoDay){
+
+    //   data.map(datos => {
+    //     datos.balance = (datos.monthlyUSD - (datos.monthlyUSD * (discount / 100))).toFixed(2);
+    //     datos.balance = Math.round(datos.prontoPago);
+
+    //   })
+
+    // }
+
     const deudas = await Local.all({
-      attributes: 
-      [
-      [Sequelize.fn('sum', Sequelize.col('monthlyUSD')), 'total'],
-      [Sequelize.fn('sum', Sequelize.col('prontoPago')), 'totalPronto']]  
+      attributes:
+        [
+          [Sequelize.fn('sum', Sequelize.col('monthlyUSD')), 'total'],
+          [Sequelize.fn('sum', Sequelize.col('prontoPago')), 'totalPronto']]
 
     });
 
 
- 
-    res.send({data: data, deudas: deudas})
+
+    res.send({ data: data, deudas: deudas })
   } catch (e) {
     res.status(400).send({ error: e.message })
   }
@@ -70,10 +89,10 @@ async function getTableMonthly(req, res) {
     });
 
 
-    const LGdata = await LagoMallData.findOne({ where: { month: { [Op.between]: [date, dateMax] } } });
+    const LGdata = await LagoMallData.findAll({ where: { month: { [Op.between]: [date, dateMax] } } });
 
-    let condominio = (LGdata.breakeven * LGdata.meter);  // MONTO DEL CONDOMINIO
-    let discount = LGdata.discount;
+    let condominio = (LGdata[0].breakeven * LGdata[0].meter);  // MONTO DEL CONDOMINIO
+    let discount = LGdata[0].discount;
 
     data.map(datos => {
       datos.monthlyUSD = (datos.percentageOfCC * condominio).toFixed(2);  //CALCULO DE CUOTA MENSUAL
@@ -122,7 +141,7 @@ async function updateTable(req, res) {
 
     let date = req.body.month + '-01';
 
-    let dateMax = req.body.month + '-30';
+    let dateMax = req.body.month + '-27';
 
     // DIA DEL MES PARA DIFERENCIAR ENTRE COBRAR PRONTO PAGO Y MONTO COMPLETP (A DISCUSION)
     let body = await Pronto.validateAsync(req.body);
@@ -139,9 +158,16 @@ async function updateTable(req, res) {
 
     });
 
-    const LGdata = await LagoMallData.findOne({ where: { month: { [Op.between]: [date, dateMax] } } });
+    const LGdata = await LagoMallData.findOne({
+      where: { month: { [Op.between]: [date, dateMax] } }, order: [
+        ['id', 'DESC'],
+      ],
+      limit: 1
+    });
 
     if (!data || !LGdata) {
+
+      console.log(data + '   ' + LGdata);
 
       return res.send({
         ok: false,
@@ -149,6 +175,8 @@ async function updateTable(req, res) {
       })
 
     } else {
+
+      console.log('soy la data :D'+ LGdata);
 
 
       let condominio = (LGdata.breakeven * LGdata.meter);  // MONTO DEL CONDOMINIO
@@ -163,25 +191,24 @@ async function updateTable(req, res) {
         datos.prontoPago = Math.round(datos.prontoPago);
 
 
-        if (day < body.diaProntoPago) {          //SI EL DIA ES MENOR AL ESTABLECIDO, ENTONCES COBRAR PRONTOPAGO, SINO, MONTO COMPLETO
+        // if (day < body.diaProntoPago) {          //SI EL DIA ES MENOR AL ESTABLECIDO, ENTONCES COBRAR PRONTOPAGO, SINO, MONTO COMPLETO
 
-          datos.balance = datos.balance - datos.prontoPago;
+        //   datos.balance = datos.balance - datos.prontoPago;
 
-          for (let i = 0; i < data.length; i++) {
-            updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, idLGData: LGdata.id }, { where: { code: data[i].code } });
-            updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, balance: data[i].balance }, { where: { code: data[i].code } });
-          }
+        //   for (let i = 0; i < data.length; i++) {
+        //     updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, idLGData: LGdata.id }, { where: { code: data[i].code } });
+        //     updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, balance: data[i].balance }, { where: { code: data[i].code } });
+        //   }
 
-        } else {
+        datos.balance = datos.balance - datos.monthlyUSD
 
-          datos.balance = datos.balance - datos.monthlyUSD
-
-          for (let i = 0; i < data.length; i++) {
-            updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, balance: data[i].balance }, { where: { code: data[i].code } });
-            updatedData = Local.updateTab({ prontoPago: data[i].prontoPago }, { where: { code: data[i].code } });
-          }
-
+        for (let i = 0; i < data.length; i++) {
+          updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, balance: data[i].balance }, { where: { code: data[i].code } });
+          updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, idLGData: LGdata.id }, { where: { code: data[i].code } });
+          
         }
+
+
 
 
       });
@@ -193,26 +220,12 @@ async function updateTable(req, res) {
 
   } catch (e) {
     res.status(400).send({ error: e.message })
+    console.log(e);
   }
 
 }
 
 
-
-
-
-
-async function getOne(req, res) {
-  try {
-    const { id } = await Id.validateAsync(req.params);
-    const data = await Local.single({
-      where: { id: id }
-    });
-    res.send(data)
-  } catch (e) {
-    res.status(400).send({ error: e.message })
-  }
-}
 
 async function make(req, res) {
   try {
@@ -226,7 +239,6 @@ async function make(req, res) {
 
 module.exports = {
   getTable,
-  getOne,
   make,
   getTableMonthly,
   updateTable,
