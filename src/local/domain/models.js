@@ -3,7 +3,7 @@ const db = require('../../database/domain')
 const { Sequelize } = require('../../database/domain');
 
 
-class Local extends Model {}
+class Local extends Model { }
 Local.init({
   id: {
     type: DataTypes.INTEGER.UNSIGNED,
@@ -11,7 +11,7 @@ Local.init({
     autoIncrement: true,
     allowNull: false
   },
-  code:{
+  code: {
     type: DataTypes.STRING(30),
     allowNull: false
   },
@@ -24,20 +24,24 @@ Local.init({
     allowNull: false
   },
   monthlyUSD: {
-    type: DataTypes.DECIMAL(8,2),
+    type: DataTypes.DECIMAL(8, 2),
     defaultValue: 0,
     allowNull: false
   },
   prontoPago: {
-    type: DataTypes.DECIMAL(8,2),
+    type: DataTypes.DECIMAL(8, 2),
     defaultValue: 0,
     allowNull: false
   },
   balance: {
-    type: DataTypes.DECIMAL(8,2),
+    type: DataTypes.DECIMAL(8, 2),
     defaultValue: 0,
     allowNull: false
+  }, prontoPagoDate: {
+    type: DataTypes.INTEGER,
+    defaultValue: 1,
+    allowNull: false
   }
-} ,{sequelize: db, modelName: 'locales'});
+}, { sequelize: db, modelName: 'locales' });
 
 module.exports = Local;

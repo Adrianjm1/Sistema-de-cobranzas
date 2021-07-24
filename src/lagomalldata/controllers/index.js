@@ -16,9 +16,9 @@ async function getAll(req, res) {
 async function getLast(req, res) {
   try {
     const data = await Lagomalldata.all({
-      attributes: ['month', 'breakeven','discount', 'meter', [Sequelize.literal('meter*breakeven'), 'montoDeCondominio']],
+      attributes: ['id','month', 'breakeven','discount', 'meter', [Sequelize.literal('meter*breakeven'), 'montoDeCondominio']],
       order: [
-        ['month', 'DESC'],
+        ['id', 'DESC'],
       ],
       limit : 1,
     });
@@ -44,10 +44,12 @@ async function updateBreakeven(req, res) {
 }
 
 async function createNewMonth(req, res) {
-
-
   try {
     const body = await BreakE.validateAsync(req.body);
+
+    let monthx = body.month
+
+    let monthx2= monthx + '-02'
 
     const data = await Lagomalldata.make({
       breakeven: body.breakeven,
@@ -60,6 +62,7 @@ async function createNewMonth(req, res) {
 
   } catch (e) {
     res.status(400).send({ error: e.message })
+    console.log(e);
   }
 }
 
@@ -71,5 +74,5 @@ module.exports = {
   getAll,
   updateBreakeven,
   createNewMonth,
-  getLast
+  getLast,
 }

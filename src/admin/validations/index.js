@@ -10,7 +10,7 @@ module.exports.Id = Joi.object({
 })
 
 module.exports.Username = Joi.object({
-  username: Joi.string().alphanum().min(3).max(30).trim().required(),
-  password: Joi.string().alphanum().min(3).max(30).trim().required(),
+  username: Joi.string().alphanum().trim().required(),
+  password: Joi.string().alphanum().trim().required(),
 
 });
