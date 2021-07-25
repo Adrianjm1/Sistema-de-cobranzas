@@ -35,6 +35,10 @@ Payment.init({
   date: {
     type: DataTypes.STRING(50),
     allowNull: false
+  },
+  description: {
+    type: DataTypes.STRING(80),
+    allowNull: false
   } 
 }, {sequelize: db, modelName: 'payments'});
 

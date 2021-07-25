@@ -51,14 +51,12 @@ async function getPaymentsDayly(req, res) {
       ]
     }).then((resp) => {
 
-      const meses = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const mes = meses[parseInt(month) - 1];
-
       let pagos = [];
+
 
       for (let i = 0; i < resp.length; i++) {
 
-        if ((resp[i].date.slice(8,10) == day) && (resp[i].date.slice(4,7) == mes) && (resp[i].date.slice(11,15) == year)) {
+        if ((resp[i].date.slice(8,10) == day) && (resp[i].date.slice(5,7) == month) && (resp[i].date.slice(0,4) == year)) {
 
           pagos.push(resp[i]);
 
@@ -94,14 +92,11 @@ async function getPaymentsMonthly(req, res) {
       ]
     }).then((resp) => {
 
-      const meses = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const mes = meses[parseInt(month) - 1];
-
       let pagos = [];
 
       for (let i = 0; i < resp.length; i++) {
 
-        if ((resp[i].date.slice(4,7) == mes) && (resp[i].date.slice(11,15) == year)) {
+        if ((resp[i].date.slice(5,7) == month) && (resp[i].date.slice(0,4) == year)) {
 
           pagos.push(resp[i]);
 
@@ -137,14 +132,11 @@ async function getSumMonthlyPayments(req, res) {
       ]
     }).then((resp) => {
 
-      const meses = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const mes = meses[parseInt(month) - 1];
-
       let pagos = [];
 
       for (let i = 0; i < resp.length; i++) {
 
-        if ((resp[i].date.slice(4,7) == mes) && (resp[i].date.slice(11,15) == year)) {
+        if ((resp[i].date.slice(5,7) == month) && (resp[i].date.slice(0,4) == year)) {
 
           pagos.push(resp[i]);
 
@@ -216,14 +208,11 @@ async function getSumDaylyPayments(req, res) {
       ]
     }).then((resp) => {
 
-      const meses = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const mes = meses[parseInt(month) - 1];
-
       let pagos = [];
 
       for (let i = 0; i < resp.length; i++) {
 
-        if ((resp[i].date.slice(8,10) == day) && (resp[i].date.slice(4,7) == mes) && (resp[i].date.slice(11,15) == year)) {
+        if ((resp[i].date.slice(8,10) == day) && (resp[i].date.slice(5,7) == month) && (resp[i].date.slice(0,4) == year)) {
 
           pagos.push(resp[i]);
 
@@ -352,18 +341,14 @@ async function make(req, res) {
 
     body.idLocal = data.id;
     body.idAdmin = req.usuario.id;
-    body.date = `${new Date(Date.now())}`;
 
     const save = await Payments.create(body);
     const balanceUpdated = await LocalFunctions.updateTab({ balance: data.balance }, { where: { id: data.id } });
-
-    console.log(save.date);
 
     res.send({ save, balanceUpdated });
 
 
   } catch (e) {
-    console.log(e);
     res.status(400).send({ error: e.message })
   }
 }
