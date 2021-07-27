@@ -274,9 +274,6 @@ async function getTableMonthly(req, res) {
       datos.monthlyUSD = Math.round(datos.monthlyUSD);               //REDONDEAR LOS DATOS ANTES DE REALIZAR la consulta
       datos.prontoPago = (datos.monthlyUSD - (datos.monthlyUSD * (discount / 100))).toFixed(2);
       datos.prontoPago = Math.round(datos.prontoPago);
-      // deudaTotalProntoPago += datos.prontoPago;
-      // deudaTotal += datos.monthlyUSD
-
 
     });
 
@@ -318,6 +315,13 @@ async function updateTable(req, res) {
 
     let dateMax = req.body.month + '-27';
 
+    let pagos = [];
+
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+    const currentDate = new Date(Date.now());
+
+
     // DIA DEL MES PARA DIFERENCIAR ENTRE COBRAR PRONTO PAGO Y MONTO COMPLETP (A DISCUSION)
     let body = await Pronto.validateAsync(req.body);
 
@@ -328,7 +332,7 @@ async function updateTable(req, res) {
     console.log(day);
 
     const data = await Local.all({
-      attributes: ['name', 'monthlyUSD', 'code', 'prontoPago', 'percentageOfCC', 'balance',],
+      attributes: ['id', 'name', 'monthlyUSD', 'code', 'prontoPago', 'percentageOfCC', 'balance',],
 
 
     });
@@ -350,9 +354,6 @@ async function updateTable(req, res) {
       })
 
     } else {
-
-      console.log('soy la data :D'+ LGdata);
-
 
       let condominio = (LGdata.breakeven * LGdata.meter);  // MONTO DEL CONDOMINIO
       let discount = LGdata.discount;
@@ -377,16 +378,34 @@ async function updateTable(req, res) {
 
         datos.balance = datos.balance - datos.monthlyUSD
 
+      });
+
+
+
         for (let i = 0; i < data.length; i++) {
           updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, balance: data[i].balance }, { where: { code: data[i].code } });
           updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, idLGData: LGdata.id }, { where: { code: data[i].code } });
-          
+
+
+          const createPayment = {
+            amountUSD: -data[i].monthlyUSD,
+            referenceNumber: null,
+            bank: 'Cuota mensual',
+            idLocal: data[i].id,
+            idAdmin: 1,
+            exchangeRate: 1,
+            paymentUSD: true,
+            date: `${currentDate.getFullYear()}-${currentDate.getMonth() + 1 < 10 ? `0${currentDate.getMonth() + 1}` : `${currentDate.getMonth() + 1}`}-${currentDate.getDate()}`,
+            description: `Cobro referente al mes de ${meses[currentDate.getMonth()]}`
+
+          }
+
+          const pago = Payments.create(createPayment);
+          pagos.push(pago);
+
+
         }
 
-
-
-
-      });
 
       res.send(data);
 

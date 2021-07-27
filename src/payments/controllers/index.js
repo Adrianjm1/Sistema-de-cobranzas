@@ -14,7 +14,7 @@ async function getPaymentsByLocal(req, res) {    // SE REQUIEREN LOS PAGOS POR L
 
 
     const data = await Payments.allPaymentsByLocal({
-      attributes: ['id', 'amountUSD', 'referenceNumber', 'bank', 'createdAt', 'date', 'exchangeRate','description', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['id', 'amountUSD', 'referenceNumber', 'bank', 'createdAt', 'date', 'exchangeRate', 'description', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       include: [{ model: Admin, attributes: ['username'] }, { model: Local, attributes: ['name', 'code'], where: { code } }],
       order: [
         ['id', 'DESC'],
@@ -56,10 +56,17 @@ async function getPaymentsDayly(req, res) {
 
       for (let i = 0; i < resp.length; i++) {
 
-        if ((resp[i].date.slice(8,10) == day) && (resp[i].date.slice(5,7) == month) && (resp[i].date.slice(0,4) == year)) {
+        if ((resp[i].date.slice(8, 10) == day) && (resp[i].date.slice(5, 7) == month) && (resp[i].date.slice(0, 4) == year)) {
 
-          pagos.push(resp[i]);
+          if (resp[i].referenceNumber == null) {
 
+            continue;
+
+          } else {
+
+            pagos.push(resp[i]);
+
+          }
         }
 
       }
@@ -96,10 +103,17 @@ async function getPaymentsMonthly(req, res) {
 
       for (let i = 0; i < resp.length; i++) {
 
-        if ((resp[i].date.slice(5,7) == month) && (resp[i].date.slice(0,4) == year)) {
+        if ((resp[i].date.slice(5, 7) == month) && (resp[i].date.slice(0, 4) == year)) {
 
-          pagos.push(resp[i]);
+          if (resp[i].referenceNumber == null) {
 
+            continue;
+
+          } else {
+
+            pagos.push(resp[i]);
+
+          }
         }
 
       }
@@ -126,7 +140,7 @@ async function getSumMonthlyPayments(req, res) {
     let year = req.query.year;
 
     Payments.allPaymentsByLocal({
-      attributes: ['id', 'amountUSD', 'createdAt', 'date', 'exchangeRate', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['id', 'amountUSD', 'createdAt', 'referenceNumber', 'date', 'exchangeRate', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       order: [
         ['id', 'DESC'],
       ]
@@ -136,10 +150,17 @@ async function getSumMonthlyPayments(req, res) {
 
       for (let i = 0; i < resp.length; i++) {
 
-        if ((resp[i].date.slice(5,7) == month) && (resp[i].date.slice(0,4) == year)) {
+        if ((resp[i].date.slice(5, 7) == month) && (resp[i].date.slice(0, 4) == year)) {
 
-          pagos.push(resp[i]);
+          if (resp[i].referenceNumber == null) {
 
+            continue;
+
+          } else {
+
+            pagos.push(resp[i]);
+
+          }
         }
 
       }
@@ -212,10 +233,17 @@ async function getSumDaylyPayments(req, res) {
 
       for (let i = 0; i < resp.length; i++) {
 
-        if ((resp[i].date.slice(8,10) == day) && (resp[i].date.slice(5,7) == month) && (resp[i].date.slice(0,4) == year)) {
+        if ((resp[i].date.slice(8, 10) == day) && (resp[i].date.slice(5, 7) == month) && (resp[i].date.slice(0, 4) == year)) {
 
-          pagos.push(resp[i]);
+          if (resp[i].referenceNumber == null) {
 
+            continue;
+
+          } else {
+
+            pagos.push(resp[i]);
+
+          }
         }
 
       }
@@ -277,7 +305,7 @@ async function getSumPaymentsUSD(req, res) {
     let year = req.query.year;
 
     Payments.allPaymentsByLocal({
-      attributes: ['amountUSD', 'createdAt', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['amountUSD', 'referenceNumber', 'createdAt', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       order: [
         ['id', 'DESC'],
       ]
@@ -289,17 +317,23 @@ async function getSumPaymentsUSD(req, res) {
 
         if (((resp[i].createdAt.getMonth() + 1) == month) && (resp[i].createdAt.getFullYear() == year)) {
 
-          pagos.push(resp[i]);
+          if (resp[i].referenceNumber == null) {
 
+            continue;
+
+          } else {
+
+            pagos.push(resp[i]);
+
+          }
         }
-
       }
 
       let sumaUSD = 0;
 
       pagos.map(datos => {
 
-          sumaUSD = sumaUSD + parseFloat(datos.amountUSD);
+        sumaUSD = sumaUSD + parseFloat(datos.amountUSD);
       });
 
       res.send({
