@@ -14,7 +14,7 @@ module.exports.Pay = Joi.object({
   exchangeRate: Joi.string().max(30).trim().required(),
   paymentUSD: Joi.boolean().required(),
   date: Joi.string().max(30).trim().required(),
-  description: Joi.string().max(30).trim().required(),
+  description: Joi.string().max(80)
 });
 
 

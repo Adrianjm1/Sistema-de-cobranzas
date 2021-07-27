@@ -328,7 +328,7 @@ async function updateTable(req, res) {
     console.log(day);
 
     const data = await Local.all({
-      attributes: ['name', 'monthlyUSD', 'code', 'prontoPago', 'percentageOfCC', 'balance'],
+      attributes: ['name', 'monthlyUSD', 'code', 'prontoPago', 'percentageOfCC', 'balance',],
 
 
     });
