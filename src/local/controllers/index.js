@@ -226,24 +226,6 @@ async function getTablePDF(req, res) {
   }
 }
 
-// async function deudaTotal(req,res){
-
-//   try {
-//     const data = await Local.all({
-//       attributes: 
-//       ['monthlyUSD', 'prontoPago', 
-//       [Sequelize.fn('sum', Sequelize.col('monthlyUSD')), 'total'],
-//       [Sequelize.fn('sum', Sequelize.col('prontoPago')), 'totalPronto']]  
-
-//     });
-//     res.send(data)
-//   } catch (e) {
-//     res.status(400).send({ error: e.message })
-//   }
-
-// }
-
-
 
 async function getTableMonthly(req, res) {
 
@@ -259,7 +241,7 @@ async function getTableMonthly(req, res) {
   try {
 
     const data = await Local.all({
-      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago'],
+      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago', 'balance'],
       include: [{ model: Owner, attributes: ['firstName', 'lastName'] }],
     });
 

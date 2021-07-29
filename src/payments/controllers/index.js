@@ -209,7 +209,7 @@ async function getSumPaymentsUSD(req, res) {
     let year = req.query.year;
 
     Payments.allPaymentsByLocal({
-      attributes: ['amountUSD', 'referenceNumber', 'createdAt', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['amountUSD', 'referenceNumber', 'date', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       order: [
         ['id', 'DESC'],
       ]
@@ -219,7 +219,7 @@ async function getSumPaymentsUSD(req, res) {
 
       for (let i = 0; i < resp.length; i++) {
 
-        if (((resp[i].createdAt.getMonth() + 1) == month) && (resp[i].createdAt.getFullYear() == year)) {
+        if ((resp[i].date.slice(5, 7) == month) && (resp[i].date.slice(0, 4) == year)) {
 
           if (resp[i].referenceNumber == null) {
 
