@@ -289,7 +289,7 @@ async function updateBalance(req, res) {
 
   try {
 
-    const code = req.params.code;
+    const code = req.body.code;
     const balance = req.body.balance;
 
     const data = Local.updateTab({ balance }, { where: { code } });

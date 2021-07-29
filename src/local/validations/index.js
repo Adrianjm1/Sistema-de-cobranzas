@@ -16,7 +16,7 @@ module.exports.Month = Joi.object({
 
 
 module.exports.Pronto = Joi.object({
-  diaProntoPago: Joi.number().min(1).max(30).required(),
+ 
   month: Joi.date().required(),
   idLGData: Joi.number()
 })
