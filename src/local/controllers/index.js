@@ -320,7 +320,8 @@ async function updateTable(req, res) {
     const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
     const currentDate = new Date(Date.now());
-
+    const numberMonth = req.body.month.slice(5,7);
+    const numberMonth1 = parseInt(numberMonth);
 
     // DIA DEL MES PARA DIFERENCIAR ENTRE COBRAR PRONTO PAGO Y MONTO COMPLETP (A DISCUSION)
     let body = await Pronto.validateAsync(req.body);
@@ -329,11 +330,9 @@ async function updateTable(req, res) {
     let dayAux = new Date();
     let day = dayAux.getDate();
 
-    console.log(day);
-
+  
     const data = await Local.all({
       attributes: ['id', 'name', 'monthlyUSD', 'code', 'prontoPago', 'percentageOfCC', 'balance',],
-
 
     });
 
@@ -381,7 +380,6 @@ async function updateTable(req, res) {
       });
 
 
-
         for (let i = 0; i < data.length; i++) {
           updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, balance: data[i].balance }, { where: { code: data[i].code } });
           updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, idLGData: LGdata.id }, { where: { code: data[i].code } });
@@ -396,7 +394,7 @@ async function updateTable(req, res) {
             exchangeRate: 1,
             paymentUSD: true,
             date: `${currentDate.getFullYear()}-${currentDate.getMonth() + 1 < 10 ? `0${currentDate.getMonth() + 1}` : `${currentDate.getMonth() + 1}`}-${currentDate.getDate()}`,
-            description: `Cobro referente al mes de ${meses[currentDate.getMonth()]}`
+            description: `Cobro referente al mes de ${meses[numberMonth1 - 1]}`
 
           }
 

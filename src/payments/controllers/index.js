@@ -71,8 +71,43 @@ async function getPaymentsDayly(req, res) {
 
       }
 
-      res.send(pagos);
+      let amountBS = [];
+      let sumaBS = 0;
+      let sumaUSD = 0;
+      let counter = 0;
 
+      pagos.map(datos => {
+
+        amountBS[counter] = parseFloat(datos.amountUSD) * parseFloat(datos.exchangeRate);
+
+        counter++;
+
+      });
+
+      counter = 0;
+
+      pagos.map(datos => {
+
+        if (datos.paymentUSD === true) {
+
+          sumaUSD = sumaUSD + parseFloat(datos.amountUSD);
+
+        } else {
+
+          sumaBS = sumaBS + parseFloat(amountBS[counter]);
+
+        }
+
+        counter++;
+
+      });
+
+      res.send({
+        pagos,
+        totalBS: `${sumaBS} BS`,
+        totalUSD: `${sumaUSD} USD`
+
+      });
     })
       .catch((error) =>
         console.log(error)
@@ -118,53 +153,6 @@ async function getPaymentsMonthly(req, res) {
 
       }
 
-      res.send(pagos);
-
-    })
-      .catch((error) =>
-        console.log(error)
-      )
-
-  } catch (e) {
-    res.status(400).send({ error: e.message })
-  }
-}
-
-
-
-
-async function getSumMonthlyPayments(req, res) {
-  try {
-
-    let month = req.query.month;
-    let year = req.query.year;
-
-    Payments.allPaymentsByLocal({
-      attributes: ['id', 'amountUSD', 'createdAt', 'referenceNumber', 'date', 'exchangeRate', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
-      order: [
-        ['id', 'DESC'],
-      ]
-    }).then((resp) => {
-
-      let pagos = [];
-
-      for (let i = 0; i < resp.length; i++) {
-
-        if ((resp[i].date.slice(5, 7) == month) && (resp[i].date.slice(0, 4) == year)) {
-
-          if (resp[i].referenceNumber == null) {
-
-            continue;
-
-          } else {
-
-            pagos.push(resp[i]);
-
-          }
-        }
-
-      }
-
       let amountBS = [];
       let sumaBS = 0;
       let sumaUSD = 0;
@@ -197,6 +185,7 @@ async function getSumMonthlyPayments(req, res) {
       });
 
       res.send({
+        pagos,
         totalBS: `${sumaBS} BS`,
         totalUSD: `${sumaUSD} USD`
 
@@ -207,95 +196,10 @@ async function getSumMonthlyPayments(req, res) {
         console.log(error)
       )
 
-
   } catch (e) {
     res.status(400).send({ error: e.message })
   }
 }
-
-
-async function getSumDaylyPayments(req, res) {
-  try {
-
-    let day = req.query.day;
-    let month = req.query.month;
-    let year = req.query.year;
-
-    Payments.allPaymentsByLocal({
-      attributes: ['id', 'amountUSD', 'referenceNumber', 'bank', 'date', 'createdAt', 'exchangeRate', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
-      include: [{ model: Admin, attributes: ['username'] }, { model: Local, attributes: ['code'] }],
-      order: [
-        ['id', 'DESC'],
-      ]
-    }).then((resp) => {
-
-      let pagos = [];
-
-      for (let i = 0; i < resp.length; i++) {
-
-        if ((resp[i].date.slice(8, 10) == day) && (resp[i].date.slice(5, 7) == month) && (resp[i].date.slice(0, 4) == year)) {
-
-          if (resp[i].referenceNumber == null) {
-
-            continue;
-
-          } else {
-
-            pagos.push(resp[i]);
-
-          }
-        }
-
-      }
-
-      let amountBS = [];
-      let sumaBS = 0;
-      let sumaUSD = 0;
-      let counter = 0;
-
-      pagos.map(datos => {
-
-        amountBS[counter] = parseFloat(datos.amountUSD) * parseFloat(datos.exchangeRate);
-
-        counter++;
-
-      });
-
-      counter = 0;
-
-      pagos.map(datos => {
-
-        if (datos.paymentUSD === true) {
-
-          sumaUSD = sumaUSD + parseFloat(datos.amountUSD);
-
-        } else {
-
-          sumaBS = sumaBS + parseFloat(amountBS[counter]);
-
-        }
-
-        counter++;
-
-      });
-
-      res.send({
-        totalBS: `${sumaBS} BS`,
-        totalUSD: `${sumaUSD} USD`
-
-      });
-
-    })
-      .catch((error) =>
-        console.log(error)
-      )
-
-
-  } catch (e) {
-    res.status(400).send({ error: e.message })
-  }
-}
-
 
 
 async function getSumPaymentsUSD(req, res) {
@@ -430,8 +334,6 @@ module.exports = {
   getPaymentsByLocal,
   updatePayment,
   deletePayment,
-  getSumMonthlyPayments,
-  getSumDaylyPayments,
   getPaymentsDayly,
   getPaymentsMonthly,
   getSumPaymentsUSD
