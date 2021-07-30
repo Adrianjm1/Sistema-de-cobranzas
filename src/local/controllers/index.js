@@ -376,8 +376,8 @@ async function updateTable(req, res) {
             exchangeRate: 1,
             paymentUSD: true,
             date: `${currentDate.getFullYear()}-${currentDate.getMonth() + 1 < 10 ? `0${currentDate.getMonth() + 1}` : `${currentDate.getMonth() + 1}`}-${currentDate.getDate()}`,
-            description: `Cobro referente al mes de ${meses[numberMonth1 - 1]}`
-
+            description: `Cobro referente al mes de ${meses[numberMonth1 - 1]}`,
+            restanteUSD: data[i].balance
           }
 
           const pago = Payments.create(createPayment);

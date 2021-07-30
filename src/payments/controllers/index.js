@@ -14,10 +14,10 @@ async function getPaymentsByLocal(req, res) {    // SE REQUIEREN LOS PAGOS POR L
 
 
     const data = await Payments.allPaymentsByLocal({
-      attributes: ['id', 'amountUSD', 'referenceNumber', 'bank', 'createdAt', 'date', 'exchangeRate', 'description', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['id', 'amountUSD', 'referenceNumber', 'restanteUSD', 'bank', 'createdAt', 'date', 'exchangeRate', 'description', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       include: [{ model: Admin, attributes: ['username'] }, { model: Local, attributes: ['name', 'code'], where: { code } }],
       order: [
-        ['id', 'ASC'],
+        ['id', 'DESC'],
       ]
 
     });
@@ -44,7 +44,7 @@ async function getPaymentsDayly(req, res) {
     let year = req.query.year;
 
     Payments.allPaymentsByLocal({
-      attributes: ['id', 'amountUSD', 'referenceNumber', 'bank', 'date', 'createdAt', 'exchangeRate', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['id', 'amountUSD', 'referenceNumber', 'restanteUSD', 'bank', 'date', 'createdAt', 'exchangeRate', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       include: [{ model: Admin, attributes: ['username'] }, { model: Local, attributes: ['code'] }],
       order: [
         ['id', 'DESC'],
@@ -127,7 +127,7 @@ async function getPaymentsMonthly(req, res) {
     let year = req.query.year;
 
     Payments.allPaymentsByLocal({
-      attributes: ['id', 'amountUSD', 'referenceNumber', 'bank', 'createdAt', 'date', 'exchangeRate', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['id', 'amountUSD', 'referenceNumber', 'restanteUSD', 'bank', 'createdAt', 'date', 'exchangeRate', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       include: [{ model: Admin, attributes: ['username'] }, { model: Local, attributes: ['code'] }],
       order: [
         ['id', 'DESC'],
@@ -209,7 +209,7 @@ async function getSumPaymentsUSD(req, res) {
     let year = req.query.year;
 
     Payments.allPaymentsByLocal({
-      attributes: ['amountUSD', 'referenceNumber', 'date', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['amountUSD', 'referenceNumber', 'date', 'restanteUSD', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       order: [
         ['id', 'DESC'],
       ]
@@ -279,6 +279,7 @@ async function make(req, res) {
 
     body.idLocal = data.id;
     body.idAdmin = req.usuario.id;
+    body.restanteUSD = data.balance;
 
     const save = await Payments.create(body);
     const balanceUpdated = await LocalFunctions.updateTab({ balance: data.balance }, { where: { id: data.id } });

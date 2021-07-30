@@ -32,6 +32,10 @@ Payment.init({
     defaultValue: true,
     allowNull: false
   },
+  restanteUSD: {
+    type: DataTypes.DECIMAL(8,2),
+    allowNull: false
+  },
   date: {
     type: DataTypes.STRING(50),
     allowNull: false
