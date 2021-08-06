@@ -330,6 +330,58 @@ async function deletePayment(req, res) {
 }
 
 
+async function updateCode(req, res) {
+
+  try {
+
+    const code = req.body.code;
+    const id = req.body.id;
+    const amount = req.body.amount;
+
+    let data2 = await LocalFunctions.single({
+      where: { code }
+    });
+
+    if (!data2) {
+      return res.send({
+        ok: false,
+        message: 'El codigo ingresado no existe'
+      })
+    }
+
+    let data3 = await LocalFunctions.single({
+      where: { code: 0000 }
+    });
+
+    const oldBalance = {
+      balance: parseFloat(data3.balance) - parseFloat(amount)
+    }
+
+    const payment = {
+      idLocal: data2.id,
+      restanteUSD: parseFloat(data2.balance) + parseFloat(amount),
+    }
+
+    const balance = {
+      balance: parseFloat(data2.balance) + parseFloat(amount)
+    }
+
+
+    const paymentUpdated = await Payments.updatePay(payment, { where: { id }});
+    const balanceUpdated = await LocalFunctions.updateTab(balance, { where: { code } });
+    const oldBalanceUpdated = await LocalFunctions.updateTab(oldBalance, { where: { code: 0000 } });
+
+
+    res.send({paymentUpdated, balanceUpdated, oldBalanceUpdated});
+
+
+  } catch (e) {
+    res.status(400).send({ error: e.message })
+  }
+
+}
+
+
 module.exports = {
   make,
   getPaymentsByLocal,
@@ -337,5 +389,6 @@ module.exports = {
   deletePayment,
   getPaymentsDayly,
   getPaymentsMonthly,
-  getSumPaymentsUSD
+  getSumPaymentsUSD,
+  updateCode
 }

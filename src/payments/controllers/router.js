@@ -17,6 +17,8 @@ Router.get('/get/monthly', validToken, Controller.getPaymentsMonthly);
 
 Router.get('/sum/usd', validToken, Controller.getSumPaymentsUSD);
 
+Router.patch('/upCode', validToken, Controller.updateCode);
+
 
 
 module.exports = Router;
