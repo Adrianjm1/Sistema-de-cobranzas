@@ -43,7 +43,12 @@ Payment.init({
   description: {
     type: DataTypes.STRING(80),
     allowNull: true
-  } 
+  },
+  nota: {
+  type: DataTypes.DECIMAL(8,2),
+  allowNull: false
+  }
+
 }, {sequelize: db, modelName: 'payments'});
 
 module.exports = Payment;

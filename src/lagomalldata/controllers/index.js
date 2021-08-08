@@ -16,7 +16,7 @@ async function getAll(req, res) {
 async function getLast(req, res) {
   try {
     const data = await Lagomalldata.all({
-      attributes: ['id','month', 'breakeven','discount', 'meter', [Sequelize.literal('meter*breakeven'), 'montoDeCondominio']],
+      attributes: ['id','month','prontoPagoDay', 'breakeven','discount', 'meter', [Sequelize.literal('meter*breakeven'), 'montoDeCondominio']],
       order: [
         ['id', 'DESC'],
       ],
@@ -55,7 +55,8 @@ async function createNewMonth(req, res) {
       breakeven: body.breakeven,
       meter: 18030,
       month: body.month,
-      discount: body.discount
+      discount: body.discount,
+      prontoPagoDay: body.prontoPagoDay
     });
 
     res.send(data);

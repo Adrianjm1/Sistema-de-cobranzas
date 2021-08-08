@@ -27,8 +27,7 @@ LagoMallData.init({
 
   }, prontoPagoDay: {
     type: DataTypes.INTEGER,
-    defaultValue: 1,
-    allowNull: true
+    allowNull: false
   }
 }, {sequelize: db, modelName: 'lagoMallData'});
 

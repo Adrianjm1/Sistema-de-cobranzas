@@ -16,5 +16,6 @@ module.exports.BreakE = Joi.object({
   breakeven: Joi.number().min(0).precision(1).required(),
   month: Joi.date().required(),
   discount: Joi.number().required(),
-  meter: Joi.number()
+  meter: Joi.number(),
+  prontoPagoDay: Joi.number()
 })
