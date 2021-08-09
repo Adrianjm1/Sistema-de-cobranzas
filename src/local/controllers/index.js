@@ -3,6 +3,7 @@ const pdf = require('html-pdf');
 const Local = require('../domain/index');
 const Payments = require('../../payments/domain/index');
 const Owner = require('../../owner/domain/model');
+const deudasFunctions = require('../../deudas/domain/index');
 const { Id, Schema, Month, Pronto } = require('../validations');
 const LagoMallData = require('../../lagomalldata/domain/models');
 const LMDFunctions = require('../../lagomalldata/domain/index');
@@ -357,7 +358,21 @@ async function updateTable(req, res) {
         //     updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, balance: data[i].balance }, { where: { code: data[i].code } });
         //   }
 
+        if(datos.balance < 0){
+
+          const deuda = {
+            amountUSD: datos.balance,
+            month: `${numberMonth}-${currentDate.getFullYear()}`,
+            idLocal: datos.id
+          }
+
+          deudasFunctions.create(deuda);
+
+        }
+
         datos.balance = datos.balance - datos.monthlyUSD
+
+
 
       });
 

@@ -4,6 +4,7 @@ const Admin = require('../../admin/domain/model');
 const Local = require('../../local/domain/models');
 const LagoMallData = require('../../lagomalldata/domain/models');
 const Payments = require('../../payments/domain/models');
+const Deudas = require('../../deudas/domain/models');
 
 // Owner - Local: One to Many
 Owner.hasMany(Local, {foreignKey: 'idOwner'});
@@ -24,3 +25,7 @@ Payments.belongsTo(Admin,  {foreignKey: 'idAdmin'});
 // Admin - Local: One to Many
 Admin.hasMany(Local, {foreignKey: 'idAdmin'});
 Local.belongsTo(Admin, {foreignKey: 'idAdmin'});
+
+// Admin - Local: One to Many
+Local.hasMany(Deudas, {foreignKey: 'idLocal'});
+Deudas.belongsTo(Local, {foreignKey: 'idLocal'});
