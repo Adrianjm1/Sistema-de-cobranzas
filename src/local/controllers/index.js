@@ -1,7 +1,7 @@
 const { Op, sequelize } = require('sequelize');
 const pdf = require('html-pdf');
 const Local = require('../domain/index');
-const Payments = require('../../payments/domain/index');
+const Payments = require('../../payments/domain');
 const Owner = require('../../owner/domain/model');
 const deudasFunctions = require('../../deudas/domain/index');
 const { Id, Schema, Month, Pronto } = require('../validations');
@@ -303,7 +303,7 @@ async function updateTable(req, res) {
     const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
     const currentDate = new Date(Date.now());
-    const numberMonth = req.body.month.slice(5,7);
+    const numberMonth = req.body.month.slice(5, 7);
     const numberMonth1 = parseInt(numberMonth);
 
     // DIA DEL MES PARA DIFERENCIAR ENTRE COBRAR PRONTO PAGO Y MONTO COMPLETP (A DISCUSION)
@@ -313,10 +313,9 @@ async function updateTable(req, res) {
     let dayAux = new Date();
     let day = dayAux.getDate();
 
-  
-    const data = await Local.all({
-      attributes: ['id', 'name', 'monthlyUSD', 'code', 'prontoPago', 'percentageOfCC', 'balance',],
 
+    const data = await Local.all({
+      attributes: ['id', 'name', 'monthlyUSD', 'code', 'prontoPago', 'percentageOfCC', 'balance']
     });
 
     const LGdata = await LagoMallData.findOne({
@@ -358,11 +357,11 @@ async function updateTable(req, res) {
         //     updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, balance: data[i].balance }, { where: { code: data[i].code } });
         //   }
 
-        if(datos.balance < 0){
+        if (datos.balance < 0) {
 
           const deuda = {
             amountUSD: datos.balance,
-            month: `${numberMonth}-${currentDate.getFullYear()}`,
+            month: `${(parseInt(numberMonth) - 1) < 10 ? `0${parseInt(numberMonth) - 1}` : `${parseInt(numberMonth) - 1}`}-${currentDate.getFullYear()}`,
             idLocal: datos.id
           }
 
@@ -377,29 +376,30 @@ async function updateTable(req, res) {
       });
 
 
-        for (let i = 0; i < data.length; i++) {
-          updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, balance: data[i].balance }, { where: { code: data[i].code } });
-          updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, idLGData: LGdata.id }, { where: { code: data[i].code } });
+      for (let i = 0; i < data.length; i++) {
+        updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, balance: data[i].balance }, { where: { code: data[i].code } });
+        updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, idLGData: LGdata.id }, { where: { code: data[i].code } });
 
 
-          const createPayment = {
-            amountUSD: -data[i].monthlyUSD,
-            referenceNumber: null,
-            bank: 'Cuota mensual',
-            idLocal: data[i].id,
-            idAdmin: 1,
-            exchangeRate: 1,
-            paymentUSD: true,
-            date: `${currentDate.getFullYear()}-${currentDate.getMonth() + 1 < 10 ? `0${currentDate.getMonth() + 1}` : `${currentDate.getMonth() + 1}`}-${currentDate.getDate()}`,
-            description: `Cobro referente al mes de ${meses[numberMonth1 - 1]}`,
-            restanteUSD: data[i].balance
-          }
-
-          const pago = Payments.create(createPayment);
-          pagos.push(pago);
-
-
+        const createPayment = {
+          amountUSD: -data[i].monthlyUSD,
+          referenceNumber: null,
+          bank: 'Cuota mensual',
+          idLocal: data[i].id,
+          idAdmin: 1,
+          exchangeRate: 1,
+          paymentUSD: true,
+          date: `${currentDate.getFullYear()}-${currentDate.getMonth() + 1 < 10 ? `0${currentDate.getMonth() + 1}` : `${currentDate.getMonth() + 1}`}-${currentDate.getDate()}`,
+          description: `Cobro referente al mes de ${meses[numberMonth1 - 1]}`,
+          restanteUSD: data[i].balance,
+          nota: 0
         }
+
+        const pago = await Payments.create(createPayment);
+        pagos.push(pago);
+
+
+      }
 
 
       res.send(data);
