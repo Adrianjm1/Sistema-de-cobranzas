@@ -40,8 +40,6 @@ async function updateOrDeleteDeuda(req, res) {
 
     if (!data) {
 
-      console.log('Código no existe');
-
       return res.send({
         ok: false,
         message: 'El codigo ingresado no existe'
@@ -57,6 +55,14 @@ async function updateOrDeleteDeuda(req, res) {
       ]
 
     });
+
+    if (!data2) {
+
+      return res.send({
+        ok: false,
+        message: 'Este local no posee deudas en el mes ingresado'
+      })
+    }
 
 
     if (parseInt(body.amountUSD) > parseInt(-data2.amountUSD)) {
