@@ -208,6 +208,8 @@ async function getSumPaymentsUSD(req, res) {
     let month = req.query.month;
     let year = req.query.year;
 
+    console.log('Soy el mes:' + month + ' Hola soy el year: ' + year);
+
     Payments.allPaymentsByLocal({
       attributes: ['amountUSD', 'referenceNumber', 'date', 'restanteUSD', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       order: [
@@ -236,9 +238,9 @@ async function getSumPaymentsUSD(req, res) {
       let sumaUSD = 0;
 
       pagos.map(datos => {
-
         sumaUSD = sumaUSD + parseFloat(datos.amountUSD);
       });
+      
 
       res.send({
         total: `${sumaUSD}`
