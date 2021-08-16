@@ -21,7 +21,15 @@ async function getDeudas(req, res) {
 
     });
 
-    res.send(data);
+    let sumDeudas = 0;
+
+    for (let i=0; i<data.length; i++){
+
+      sumDeudas = sumDeudas + parseFloat(data[i].amountUSD);
+
+    }
+
+    res.send({data,sumDeudas});
 
   } catch (e) {
     res.status(400).send({ error: e.message })

@@ -75,8 +75,11 @@ async function getPaymentsDayly(req, res) {
       let sumaBS = 0;
       let sumaUSD = 0;
       let counter = 0;
+      let sumaTotal = 0;
 
       pagos.map(datos => {
+
+        sumaTotal = sumaTotal + parseFloat(datos.amountUSD);
 
         amountBS[counter] = parseFloat(datos.amountUSD) * parseFloat(datos.exchangeRate);
 
@@ -105,7 +108,8 @@ async function getPaymentsDayly(req, res) {
       res.send({
         pagos,
         totalBS: `${sumaBS} BS`,
-        totalUSD: `${sumaUSD} USD`
+        totalUSD: `${sumaUSD} USD`,
+        sumaTotal: `${sumaTotal} USD`
 
       });
     })
@@ -156,9 +160,12 @@ async function getPaymentsMonthly(req, res) {
       let amountBS = [];
       let sumaBS = 0;
       let sumaUSD = 0;
+      let sumaTotal = 0;
       let counter = 0;
 
       pagos.map(datos => {
+
+        sumaTotal = sumaTotal + parseFloat(datos.amountUSD);
 
         amountBS[counter] = parseFloat(datos.amountUSD) * parseFloat(datos.exchangeRate);
 
@@ -187,8 +194,8 @@ async function getPaymentsMonthly(req, res) {
       res.send({
         pagos,
         totalBS: `${sumaBS} BS`,
-        totalUSD: `${sumaUSD} USD`
-
+        totalUSD: `${sumaUSD} USD`,
+        sumaTotal: `${sumaTotal} USD`
       });
 
     })
