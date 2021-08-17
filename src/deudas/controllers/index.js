@@ -45,9 +45,8 @@ async function getDeudasRango(req, res) {
     const month1 = req.query.month1;
     const month2 = req.query.month2;
 
-    console.log('Soy el 1 : ' + month1 + '   soy ek 2 :  ' + month2);
     const data = await Deudas.all({
-      attributes: ['id', 'month', [Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal'],],
+      attributes: ['id', 'month', 'amountUSD',[Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal']],
       include: [{ model: Local, attributes: ['name', 'code'] }],
       where: { month: {[Op.between]: [month1, month2]} },
       order: [
@@ -56,14 +55,6 @@ async function getDeudasRango(req, res) {
       group: ['code']
 
     });
-
-    // let sumDeudas = 0;
-
-    // for (let i=0; i<data.length; i++){
-
-    //   sumDeudas = sumDeudas + parseFloat(data[i].amountUSD);
-
-    // }
 
     res.send(data);
 
@@ -111,8 +102,6 @@ async function updateOrDeleteDeuda(req, res) {
 
 
     if (parseInt(body.amountUSD) > parseInt(-data2.amountUSD)) {
-
-      console.log('Monto mayor');
 
       return res.send({
         ok: false,
