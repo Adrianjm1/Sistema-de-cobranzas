@@ -3,6 +3,7 @@ const LocalFunctions = require('../../local/domain');
 const Payments = require('../../payments/domain/models');
 const PaymentsFunctions = require('../../payments/domain');
 const Deudas = require('../domain');
+const { Op } = require("sequelize");
 const { Sequelize } = require('../../database/domain');
 
 
@@ -16,7 +17,7 @@ async function getDeudas(req, res) {
       include: [{ model: Local, attributes: ['name', 'code'] }],
       where: { month: month },
       order: [
-        ['id', 'DESC'],
+        ['id', 'ASC'],
       ]
 
     });
@@ -35,6 +36,42 @@ async function getDeudas(req, res) {
     res.status(400).send({ error: e.message })
   }
 }
+
+
+
+async function getDeudasRango(req, res) {
+  try {
+
+    const month1 = req.query.month1;
+    const month2 = req.query.month2;
+
+    console.log('Soy el 1 : ' + month1 + '   soy ek 2 :  ' + month2);
+    const data = await Deudas.all({
+      attributes: ['id', 'month', [Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal'],],
+      include: [{ model: Local, attributes: ['name', 'code'] }],
+      where: { month: {[Op.between]: [month1, month2]} },
+      order: [
+        ['id', 'ASC'],
+      ],
+      group: ['code']
+
+    });
+
+    // let sumDeudas = 0;
+
+    // for (let i=0; i<data.length; i++){
+
+    //   sumDeudas = sumDeudas + parseFloat(data[i].amountUSD);
+
+    // }
+
+    res.send(data);
+
+  } catch (e) {
+    res.status(400).send({ error: e.message })
+  }
+}
+
 
 async function updateOrDeleteDeuda(req, res) {
   try {
@@ -132,5 +169,6 @@ async function updateOrDeleteDeuda(req, res) {
 
 module.exports = {
   getDeudas,
-  updateOrDeleteDeuda
+  updateOrDeleteDeuda,
+  getDeudasRango
 }
