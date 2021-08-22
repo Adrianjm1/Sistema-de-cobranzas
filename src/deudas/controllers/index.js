@@ -26,7 +26,7 @@ async function getDeudas(req, res) {
 
     for (let i=0; i<data.length; i++){
 
-      sumDeudas = sumDeudas + parseFloat(data[i].amountUSD);
+      sumDeudas = sumDeudas + (parseFloat(data[i].amountUSD)*-1);
 
     }
 
@@ -46,7 +46,7 @@ async function getDeudasRango(req, res) {
     const month2 = req.query.month2;
 
     const data = await Deudas.all({
-      attributes: ['id', 'month', 'amountUSD',[Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal']],
+      attributes: ['id', 'month', 'amountUSD', [Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal']],
       include: [{ model: Local, attributes: ['name', 'code'] }],
       where: { month: {[Op.between]: [month1, month2]} },
       order: [
@@ -55,6 +55,7 @@ async function getDeudasRango(req, res) {
       group: ['code']
 
     });
+
 
     res.send(data);
 

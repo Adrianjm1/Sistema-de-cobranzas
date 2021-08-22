@@ -213,14 +213,30 @@ async function getTablePDF(req, res) {
 
 
 
-    pdf.create(content).toFile('./docs/html-pdf.pdf', function (err, resp) {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(resp);
-      }
+    // pdf.create(content).toFile('./docs/html-pdf.pdf', function (err, resp) {
+    //   if (err) {
+    //     res.send(err);
+    //   } else {
+    //     res.send(resp);
+    //   }
 
+    // });
+
+
+    pdf.create(content).toStream(function(err, stream){
+      if(err) {
+        res.send(err);
+      }else{
+        console.log('amigo de los gallos y de las gallinas');
+              res.set('Content-type', 'application/pdf');
+              res.set('Content-Disposition', 'attachment;filename=template.pdf')
+              res.set('Cache-Control', 'no-cache')
+              stream.pipe(res)
+
+      }
     });
+
+
 
   } catch (e) {
     res.status(400).send({ error: e.message })

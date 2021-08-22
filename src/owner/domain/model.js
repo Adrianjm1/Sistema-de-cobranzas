@@ -17,11 +17,6 @@ Owner.init({
     type: DataTypes.STRING(30),
     allowNull: false
   },
-  nationalID: {
-    type: DataTypes.STRING(12),
-    defaultValue: '',
-    allowNull: false
-  },
   phone:{
     type: DataTypes.STRING(20),
     defaultValue: '',

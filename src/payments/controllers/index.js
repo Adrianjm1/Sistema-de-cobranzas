@@ -323,13 +323,13 @@ async function updatePayment(req, res) {
 async function deletePayment(req, res) {
   try {
 
-    const reference = req.params.reference;
-
-    await Payments.deletePay({ where: { referenceNumber: reference } });
+    const id = req.params.id;
+console.log(id);
+    await Payments.deletePay({ where: { id: id } });
 
     res.send({
       ok: true,
-      res: `${reference} ha sido eliminado`
+      res: `${id} ha sido eliminado`
     });
 
 
@@ -399,5 +399,6 @@ module.exports = {
   getPaymentsDayly,
   getPaymentsMonthly,
   getSumPaymentsUSD,
-  updateCode
+  updateCode,
+  deletePayment
 }
