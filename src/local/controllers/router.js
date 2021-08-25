@@ -4,7 +4,6 @@ const {validToken, verificaAdminMaster} = require('../../admin/controllers/middl
 
 Router.get('/tableMonthly/:mes', validToken, Controller.getTableMonthly);
 Router.get('/table'  , validToken, Controller.getTable);
-Router.get('/table/pdf'  , validToken, Controller.getTablePDF);
 Router.post('/make', validToken, Controller.make);
 Router.patch('/upBalance', [validToken, verificaAdminMaster], Controller.updateBalance);
 Router.patch('/up', [validToken, verificaAdminMaster], Controller.updateTable);
