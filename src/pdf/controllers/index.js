@@ -189,16 +189,17 @@ async function getTablePDF(req, res) {
 
     let content = part1 + part2 + part3;
 
-
-    pdf.create(content).toFile('./docs/html-pdf.pdf', function (err, resp) {
-      if (err) {
+    pdf.create(content).toStream(function(err, stream){
+      if(err) {
         res.send(err);
-      } else {
-        res.send(resp);
+      }else{
+              res.set('Content-type', 'application/pdf');
+              res.set('Content-Disposition', 'attachment;filename=template.pdf')
+              res.set('Cache-Control', 'no-cache')
+              stream.pipe(res)
+
       }
-
     });
-
 
     /*     pdf.create(content).toStream(function(err, stream){
           if(err) {
@@ -437,15 +438,18 @@ async function pagosPorDiaPDF(req, res) {
       let content = part1 + part2 + part3;
 
 
-      pdf.create(content).toFile('./docs/html-pdf.pdf', function (err, resp) {
-        if (err) {
+      pdf.create(content).toStream(function(err, stream){
+        if(err) {
           res.send(err);
-        } else {
-          res.send(resp);
+        }else{
+                res.set('Content-type', 'application/pdf');
+                res.set('Content-Disposition', 'attachment;filename=template.pdf')
+                res.set('Cache-Control', 'no-cache')
+                stream.pipe(res)
+  
         }
-
       });
-
+  
 
       /*     pdf.create(content).toStream(function(err, stream){
             if(err) {
@@ -682,14 +686,18 @@ async function pagosPorMesPDF(req, res) {
       let content = part1 + part2 + part3;
 
 
-      pdf.create(content).toFile('./docs/html-pdf.pdf', function (err, resp) {
-        if (err) {
+      pdf.create(content).toStream(function(err, stream){
+        if(err) {
           res.send(err);
-        } else {
-          res.send(resp);
+        }else{
+                res.set('Content-type', 'application/pdf');
+                res.set('Content-Disposition', 'attachment;filename=template.pdf')
+                res.set('Cache-Control', 'no-cache')
+                stream.pipe(res)
+  
         }
-
       });
+  
 
 
       /*     pdf.create(content).toStream(function(err, stream){
@@ -845,14 +853,18 @@ async function deudasPorMesPDF(req, res) {
     let content = part1 + part2 + part3;
 
 
-    pdf.create(content).toFile('./docs/html-pdf.pdf', function (err, resp) {
-      if (err) {
+    pdf.create(content).toStream(function(err, stream){
+      if(err) {
         res.send(err);
-      } else {
-        res.send(resp);
-      }
+      }else{
+              res.set('Content-type', 'application/pdf');
+              res.set('Content-Disposition', 'attachment;filename=template.pdf')
+              res.set('Cache-Control', 'no-cache')
+              stream.pipe(res)
 
+      }
     });
+
 
 
     /*     pdf.create(content).toStream(function(err, stream){
@@ -1020,15 +1032,18 @@ async function deudasPorRangoPDF(req, res) {
 
     let content = part1 + part2 + part3;
 
-
-    pdf.create(content).toFile('./docs/html-pdf.pdf', function (err, resp) {
-      if (err) {
+    pdf.create(content).toStream(function(err, stream){
+      if(err) {
         res.send(err);
-      } else {
-        res.send(resp);
-      }
+      }else{
+              res.set('Content-type', 'application/pdf');
+              res.set('Content-Disposition', 'attachment;filename=template.pdf')
+              res.set('Cache-Control', 'no-cache')
+              stream.pipe(res)
 
+      }
     });
+
 
 
     /*     pdf.create(content).toStream(function(err, stream){
