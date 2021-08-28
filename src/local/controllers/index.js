@@ -252,10 +252,32 @@ async function make(req, res) {
   }
 }
 
+
+async function findOne(req, res) {
+
+
+  const idLocal = req.query.idLocal
+
+  try {
+    const data = await Local.BuscarUno({ where: { id:idLocal } });
+    if (data === null) {
+      console.log('Not found!');
+    } 
+    res.send(data)
+  } catch (e) {
+    res.status(400).send({ error: e.message })
+  }
+}
+
+
+
+
+
 module.exports = {
   getTable,
   make,
   getTableMonthly,
   updateTable,
-  updateBalance
+  updateBalance,
+  findOne
 }

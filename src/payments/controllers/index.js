@@ -14,7 +14,7 @@ async function getPaymentsByLocal(req, res) {    // SE REQUIEREN LOS PAGOS POR L
 
 
     const data = await Payments.allPaymentsByLocal({
-      attributes: ['id', 'amountUSD', 'referenceNumber', 'restanteUSD', 'bank', 'createdAt', 'date', 'exchangeRate', 'description', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['id', 'amountUSD','idLocal', 'referenceNumber', 'restanteUSD', 'bank', 'createdAt', 'date', 'exchangeRate', 'description', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       include: [{ model: Admin, attributes: ['username'] }, { model: Local, attributes: ['name', 'code'], where: { code } }],
       order: [
         ['id', 'DESC'],
@@ -245,7 +245,7 @@ async function getSumPaymentsUSD(req, res) {
       pagos.map(datos => {
         sumaUSD = sumaUSD + parseFloat(datos.amountUSD);
       });
-      
+
 
       res.send({
         total: `${sumaUSD}`
@@ -322,7 +322,7 @@ async function deletePayment(req, res) {
   try {
 
     const id = req.params.id;
-console.log(id);
+    console.log(id);
     await Payments.deletePay({ where: { id: id } });
 
     res.send({
@@ -374,12 +374,12 @@ async function updateCode(req, res) {
     }
 
 
-    const paymentUpdated = await Payments.updatePay(payment, { where: { id }});
+    const paymentUpdated = await Payments.updatePay(payment, { where: { id } });
     const balanceUpdated = await LocalFunctions.updateTab(balance, { where: { code } });
     const oldBalanceUpdated = await LocalFunctions.updateTab(oldBalance, { where: { code: 0000 } });
 
 
-    res.send({paymentUpdated, balanceUpdated, oldBalanceUpdated});
+    res.send({ paymentUpdated, balanceUpdated, oldBalanceUpdated });
 
 
   } catch (e) {

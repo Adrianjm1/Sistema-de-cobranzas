@@ -19,9 +19,19 @@ function updateTab(attr,where) {
   return Local.update(attr, where);
   
 }
+
+function BuscarUno(attr) {
+
+  return Local.findOne(attr);
+  
+}
+
+
+
 module.exports = {
   single,
   all,
   create,
-  updateTab
+  updateTab,
+  BuscarUno
 }
