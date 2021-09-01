@@ -65,6 +65,45 @@ async function getDeudasRango(req, res) {
 }
 
 
+
+async function getDeudasDesde(req, res) {
+  try {
+    const dat = new Date();
+    const datt= dat.getFullYear();
+    const dattt = dat.getMonth();
+
+    const today = `${dattt}-${datt}`
+
+        // const today = `12-2021`
+
+
+    console.log(`Hoy es ${dattt}-${datt}`);
+
+    const month = req.query.month;
+
+    const data = await Deudas.all({
+      attributes: ['id', 'month', 'amountUSD', [Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal']],
+      include: [{ model: Local, attributes: ['name', 'code'] }],
+      where: { month: {[Op.between]: [month, today]} },
+      order: [
+        ['id', 'ASC'],
+      ],
+      group: ['code']
+
+    });
+
+
+    const filtrada = data.filter(datos =>datos.month == month)
+
+
+    res.send(filtrada);
+
+  } catch (e) {
+    res.status(400).send({ error: e.message })
+  }
+}
+
+
 async function updateOrDeleteDeuda(req, res) {
   try {
 
@@ -160,5 +199,6 @@ async function updateOrDeleteDeuda(req, res) {
 module.exports = {
   getDeudas,
   updateOrDeleteDeuda,
-  getDeudasRango
+  getDeudasRango,
+  getDeudasDesde
 }
