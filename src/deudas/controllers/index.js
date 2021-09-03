@@ -84,13 +84,25 @@ async function getDeudasDesde(req, res) {
     const dataS = await Deudas.all({
       attributes: ['id', 'month', 'amountUSD', [Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal']],
       include: [{ model: Local, attributes: ['name', 'code'] }],
-      where: { month: {[Op.between]: [month, today]} },
+      // where: { month: {[Op.between]: [month, today]} },
       order: [
         ['id', 'ASC'],
       ],
       group: ['code']
 
     });
+
+
+    // const dataF = await Deudas.all({
+    //   attributes: ['id', 'month', 'amountUSD', [Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal']],
+    //   include: [{ model: Local, attributes: ['name', 'code'] }],
+    //   where: { month: month },
+    //   order: [
+    //     ['id', 'ASC'],
+    //   ],
+    //   group: ['code']
+
+    // });
 
 
     const data = dataS.filter(datos =>datos.month == month)
