@@ -81,7 +81,7 @@ async function getDeudasDesde(req, res) {
 
     const month = req.query.month;
 
-    const data = await Deudas.all({
+    const dataS = await Deudas.all({
       attributes: ['id', 'month', 'amountUSD', [Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal']],
       include: [{ model: Local, attributes: ['name', 'code'] }],
       where: { month: {[Op.between]: [month, today]} },
@@ -93,10 +93,10 @@ async function getDeudasDesde(req, res) {
     });
 
 
-    const filtrada = data.filter(datos =>datos.month == month)
+    const data = dataS.filter(datos =>datos.month == month)
 
 
-    res.send(filtrada);
+    res.send(data);
 
   } catch (e) {
     res.status(400).send({ error: e.message })
