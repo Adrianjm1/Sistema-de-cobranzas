@@ -1,5 +1,6 @@
 const Local = require('../../local/domain/models');
 const LocalFunctions = require('../../local/domain');
+const LMDFunctions = require('../../lagomalldata/domain');
 const Payments = require('../../payments/domain/models');
 const PaymentsFunctions = require('../../payments/domain');
 const Deudas = require('../domain');
@@ -22,15 +23,61 @@ async function getDeudas(req, res) {
 
     });
 
+    if (data.length == 0) {
+
+      return res.send({
+        ok: false,
+        message: 'Error'
+      })
+    }
+
     let sumDeudas = 0;
 
     for (let i=0; i<data.length; i++){
 
-      sumDeudas = sumDeudas + (parseFloat(data[i].amountUSD)*-1);
+      sumDeudas = sumDeudas + (parseFloat(data[i].amountUSD));
 
     }
 
-    res.send({data,sumDeudas});
+    const mes1 = `${month.slice(3, 7)}-${month.slice(0, 2)}-01`;
+    const mes2 = `${month.slice(3, 7)}-${month.slice(0, 2)}-30`;
+
+    const locales = await LocalFunctions.all({
+      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago', 'balance']
+    });
+
+    const LGdata = await LMDFunctions.all({ where: { month: { [Op.between]: [mes1, mes2] } } });
+
+
+    if (LGdata.length == 0) {
+
+      return res.send({
+        ok: false,
+        message: 'Error'
+      })
+    }
+
+    let condominio = (LGdata[0].breakeven * LGdata[0].meter);  // MONTO DEL CONDOMINIO
+
+    let suma = 0
+
+    locales.map(datos => {
+      datos.monthlyUSD = (datos.percentageOfCC * condominio).toFixed(2);
+      datos.monthlyUSD = Math.round(datos.monthlyUSD);
+
+      suma = suma + datos.monthlyUSD;
+
+    });
+
+    let porcentaje = (sumDeudas * 100) / suma;
+
+    res.send({
+      ok: true,
+      data,
+      sumDeudas,
+      porcentaje,
+      suma
+    });
 
   } catch (e) {
     res.status(400).send({ error: e.message })
@@ -73,11 +120,6 @@ async function getDeudasDesde(req, res) {
     const dattt = dat.getMonth();
 
     const today = `${dattt}-${datt}`
-
-        // const today = `12-2021`
-
-
-    console.log(`Hoy es ${dattt}-${datt}`);
 
     const month = req.query.month;
 

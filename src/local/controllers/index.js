@@ -1,5 +1,4 @@
 const { Op, sequelize } = require('sequelize');
-const pdf = require('html-pdf');
 const Local = require('../domain/index');
 const Payments = require('../../payments/domain');
 const Owner = require('../../owner/domain/model');
@@ -26,17 +25,6 @@ async function getTable(req, res) {
 
     });
 
-
-    // if ((mesaux.getDate()) < res.data.prontoPagoDay){
-
-    //   data.map(datos => {
-    //     datos.balance = (datos.monthlyUSD - (datos.monthlyUSD * (discount / 100))).toFixed(2);
-    //     datos.balance = Math.round(datos.prontoPago);
-
-    //   })
-
-    // }
-
     const deudas = await Local.all({
       attributes:
         [
@@ -60,11 +48,6 @@ async function getTableMonthly(req, res) {
 
   let dateMax = req.params.mes + '-30';
 
-  // let date = req.body.month + '-01';
-
-  // let dateMax = req.body.month + '-30';
-
-  console.log(date);
   try {
 
     const data = await Local.all({
@@ -183,11 +166,11 @@ async function updateTable(req, res) {
         //     updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, balance: data[i].balance }, { where: { code: data[i].code } });
         //   }
 
-        if (datos.balance < 0) {
+        if (datos.balance > 0) {
 
           const deuda = {
             amountUSD: datos.balance,
-            month: `${(parseInt(numberMonth) - 1) < 10 ? `0${parseInt(numberMonth) - 1}` : `${parseInt(numberMonth) - 1}`}-${currentDate.getFullYear()}`,
+            month: `${parseInt(numberMonth) < 10 ? `0${parseInt(numberMonth)}` : `${parseInt(numberMonth)}`}-${currentDate.getFullYear()}`,
             idLocal: datos.id
           }
 

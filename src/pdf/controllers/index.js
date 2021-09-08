@@ -3,13 +3,13 @@ const pdf = require('html-pdf');
 const Local = require('../../local/domain/index');
 const PaymentsFunctions = require('../../payments/domain/index');
 const DeudasFunctions = require('../../deudas/domain/index');
+const LMDFunctions = require('../../lagomalldata/domain/index');
 const AdminModel = require('../../admin/domain/model');
 const LocalModel = require('../../local/domain/models');
 const Owner = require('../../owner/domain/model');
 const { formatNumber } = require('../helpers/helpers');
 const deudasFunctions = require('../../deudas/domain/index');
 const LagoMallData = require('../../lagomalldata/domain/models');
-const LMDFunctions = require('../../lagomalldata/domain/index');
 const { Sequelize } = require('../../database/domain');
 
 async function getTablePDF(req, res) {
@@ -189,14 +189,14 @@ async function getTablePDF(req, res) {
 
     let content = part1 + part2 + part3;
 
-    pdf.create(content).toStream(function(err, stream){
-      if(err) {
+    pdf.create(content).toStream(function (err, stream) {
+      if (err) {
         res.send(err);
-      }else{
-              res.set('Content-type', 'application/pdf');
-              res.set('Content-Disposition', 'attachment;filename=template.pdf')
-              res.set('Cache-Control', 'no-cache')
-              stream.pipe(res)
+      } else {
+        res.set('Content-type', 'application/pdf');
+        res.set('Content-Disposition', 'attachment;filename=template.pdf')
+        res.set('Cache-Control', 'no-cache')
+        stream.pipe(res)
 
       }
     });
@@ -438,18 +438,18 @@ async function pagosPorDiaPDF(req, res) {
       let content = part1 + part2 + part3;
 
 
-      pdf.create(content).toStream(function(err, stream){
-        if(err) {
+      pdf.create(content).toStream(function (err, stream) {
+        if (err) {
           res.send(err);
-        }else{
-                res.set('Content-type', 'application/pdf');
-                res.set('Content-Disposition', 'attachment;filename=template.pdf')
-                res.set('Cache-Control', 'no-cache')
-                stream.pipe(res)
-  
+        } else {
+          res.set('Content-type', 'application/pdf');
+          res.set('Content-Disposition', 'attachment;filename=template.pdf')
+          res.set('Cache-Control', 'no-cache')
+          stream.pipe(res)
+
         }
       });
-  
+
 
       /*     pdf.create(content).toStream(function(err, stream){
             if(err) {
@@ -686,18 +686,18 @@ async function pagosPorMesPDF(req, res) {
       let content = part1 + part2 + part3;
 
 
-      pdf.create(content).toStream(function(err, stream){
-        if(err) {
+      pdf.create(content).toStream(function (err, stream) {
+        if (err) {
           res.send(err);
-        }else{
-                res.set('Content-type', 'application/pdf');
-                res.set('Content-Disposition', 'attachment;filename=template.pdf')
-                res.set('Cache-Control', 'no-cache')
-                stream.pipe(res)
-  
+        } else {
+          res.set('Content-type', 'application/pdf');
+          res.set('Content-Disposition', 'attachment;filename=template.pdf')
+          res.set('Cache-Control', 'no-cache')
+          stream.pipe(res)
+
         }
       });
-  
+
 
 
       /*     pdf.create(content).toStream(function(err, stream){
@@ -744,9 +744,33 @@ async function deudasPorMesPDF(req, res) {
 
     for (let i = 0; i < data.length; i++) {
 
-      sumDeudas = sumDeudas + (parseFloat(data[i].amountUSD) * -1);
+      sumDeudas = sumDeudas + (parseFloat(data[i].amountUSD));
 
     }
+
+    const mes1 = `${month.slice(3, 7)}-${month.slice(0, 2)}-01`;
+    const mes2 = `${month.slice(3, 7)}-${month.slice(0, 2)}-30`;
+
+    const locales = await Local.all({
+      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago', 'balance']
+    });
+
+    const LGdata = await LMDFunctions.all({ where: { month: { [Op.between]: [mes1, mes2] } } });
+
+    let condominio = (LGdata[0].breakeven * LGdata[0].meter);  // MONTO DEL CONDOMINIO
+
+    let suma = 0
+
+    locales.map(datos => {
+      datos.monthlyUSD = (datos.percentageOfCC * condominio).toFixed(2);
+      datos.monthlyUSD = Math.round(datos.monthlyUSD);
+
+      suma = suma + datos.monthlyUSD;
+
+    });
+
+    let porcentaje = (sumDeudas * 100) / suma;
+
 
     let part1 = `
     <!doctype html>
@@ -812,6 +836,11 @@ async function deudasPorMesPDF(req, res) {
                       
             <p> Total en deudas del mes: &nbsp;&nbsp;&nbsp; ${sumDeudas}$</p>
 
+            <p> Cuota total del mes: &nbsp;&nbsp;&nbsp; ${suma}$</p>
+
+            <p> Porcentaje pagado con respecto a la cuota total del mes: &nbsp;&nbsp;&nbsp; ${100 - parseFloat(porcentaje).toFixed(2)}%</p>
+
+
             <br>
 
             <table>
@@ -853,17 +882,28 @@ async function deudasPorMesPDF(req, res) {
     let content = part1 + part2 + part3;
 
 
-    pdf.create(content).toStream(function(err, stream){
-      if(err) {
+/*     pdf.create(content).toStream(function (err, stream) {
+      if (err) {
         res.send(err);
-      }else{
-              res.set('Content-type', 'application/pdf');
-              res.set('Content-Disposition', 'attachment;filename=template.pdf')
-              res.set('Cache-Control', 'no-cache')
-              stream.pipe(res)
+      } else {
+        res.set('Content-type', 'application/pdf');
+        res.set('Content-Disposition', 'attachment;filename=template.pdf')
+        res.set('Cache-Control', 'no-cache')
+        stream.pipe(res)
 
       }
+    }); */
+
+
+
+
+
+    pdf.create(content).toFile('./docs/pdf-created.pdf', function (err, resp) {
+      if (err) return res.send(err);
+      res.send(resp); // { filename: '/app/businesscard.pdf' }
     });
+
+
 
 
 
@@ -988,7 +1028,7 @@ async function deudasPorRangoPDF(req, res) {
 
             <h3>Deudas entre los meses de ${meses[parseInt(month1.slice(0, 2)) - 1]} ${month1.slice(3, 7)} y ${meses[parseInt(month2.slice(0, 2)) - 1]} ${month2.slice(3, 7)}</h3>
                       
-            <p> Total en deudas en el rango establecido: &nbsp;&nbsp;&nbsp; ${sumDeudas}$</p>
+            <p> Total en deudas en el rango establecido: &nbsp;&nbsp;&nbsp; ${sumDeudas}</p>
 
             <br>
 
@@ -1032,17 +1072,202 @@ async function deudasPorRangoPDF(req, res) {
 
     let content = part1 + part2 + part3;
 
-    pdf.create(content).toStream(function(err, stream){
-      if(err) {
+    pdf.create(content).toStream(function (err, stream) {
+      if (err) {
         res.send(err);
-      }else{
-              res.set('Content-type', 'application/pdf');
-              res.set('Content-Disposition', 'attachment;filename=template.pdf')
-              res.set('Cache-Control', 'no-cache')
-              stream.pipe(res)
+      } else {
+        res.set('Content-type', 'application/pdf');
+        res.set('Content-Disposition', 'attachment;filename=template.pdf')
+        res.set('Cache-Control', 'no-cache')
+        stream.pipe(res)
 
       }
     });
+
+
+
+    /*     pdf.create(content).toStream(function(err, stream){
+          if(err) {
+            res.send(err);
+          }else{
+            console.log('amigo de los gallos y de las gallinas');
+                  res.set('Content-type', 'application/pdf');
+                  res.set('Content-Disposition', 'attachment;filename=template.pdf')
+                  res.set('Cache-Control', 'no-cache')
+                  stream.pipe(res)
+    
+          }
+        }); */
+
+  } catch (e) {
+    res.status(400).send({ error: e.message })
+  }
+}
+
+async function deudasDesdePDF(req, res) {
+  try {
+
+    const date = new Date(Date.now());
+
+    const dat = new Date();
+    const datt = dat.getFullYear();
+    const dattt = dat.getMonth();
+
+    meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+    const today = `${dattt}-${datt}`
+
+    const month = req.query.month;
+
+    const dataS = await DeudasFunctions.all({
+      attributes: ['id', 'month', 'amountUSD', [Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal']],
+      include: [{ model: LocalModel, attributes: ['name', 'code'] }],
+      raw: true,
+      // where: { month: {[Op.between]: [month, today]} },
+      order: [
+        ['id', 'ASC'],
+      ],
+      group: ['code']
+
+    });
+
+    const dataT = await DeudasFunctions.all({
+      attributes: ['id', 'month', 'amountUSD', [Sequelize.fn('sum', Sequelize.col('amountUSD')), 'deudaTotal']],
+      include: [{ model: LocalModel, attributes: ['name', 'code'] }],
+      // where: { month: {[Op.between]: [month, today]} },
+      order: [
+        ['id', 'ASC'],
+      ],
+      group: ['code']
+
+    });
+
+    const data = dataS.filter(datos => datos.month == month)
+    const data2 = dataT.filter(datos => datos.month == month)
+
+    let part1 = `
+    <!doctype html>
+        <html>
+           <head>
+                <meta charset="utf-8">
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+                <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&family=Roboto:wght@300&display=swap" rel="stylesheet">
+                <title>PDF Result Template</title>
+                <style>
+
+                    *{
+                      font-family: 'Roboto', sans-serif;
+                      font-size: 95%;
+                    }
+
+                    h2{
+                      color: #19437F;
+                      font-size: 160% !important;
+                      text-align: center;
+                    }
+
+                    table {
+                      table-layout: fixed;
+                      width: 100%;
+                      border-collapse: collapse;
+                      border: 2px solid #19437F;
+                    }
+
+                    th {
+                      letter-spacing: 2px;
+                    }
+                    
+                    td {
+                      letter-spacing: 1px;
+                    }
+                    
+                    tbody td {
+                      text-align: center;
+                      padding: 7px 0px 7px 0px;
+                    }
+                    
+                    tfoot th {
+                      text-align: right;
+                    }
+
+                    thead th, tfoot th {
+                      background-color: #19437F;
+                      color: #fff;
+                    }                    
+
+
+                </style>
+            </head>
+            <body>
+            
+            <h2>CONDOMINIO CENTRO LAGO MALL</h2>
+
+            <p>Emitido el ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}</p>
+
+            <h3>Deudas entre ${meses[parseInt(month.slice(0, 2)) - 1]} ${month.slice(3, 7)} y ahora</h3>
+                      
+            <br>
+
+            <table>
+            <thead>
+
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Deuda ($)</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+            `
+
+    let part2 = '';
+
+
+    for (let i = 0; i < data.length; i++) {
+
+      part2 = part2 + `
+        <td>${data2[i].locale.code}</td>
+        <td>${data2[i].locale.name}</td>
+        <td>${formatNumber(parseFloat(data[i].deudaTotal))}</td>        
+
+          </tr>`
+
+    }
+
+
+
+
+    let part3 = `
+      </tbody>
+
+      </table>
+
+        </body>
+      </html>`;
+
+    let content = part1 + part2 + part3;
+
+    /*     pdf.create(content).toStream(function(err, stream){
+          if(err) {
+            res.send(err);
+          }else{
+                  res.set('Content-type', 'application/pdf');
+                  res.set('Content-Disposition', 'attachment;filename=template.pdf')
+                  res.set('Cache-Control', 'no-cache')
+                  stream.pipe(res)
+    
+          }
+        });
+     */
+    pdf.create(content).toFile('./docs/pdf-created.pdf', function (err, resp) {
+      if (err) return res.send(err);
+      res.send(resp); // { filename: '/app/businesscard.pdf' }
+    });
+
+
+
 
 
 
@@ -1071,6 +1296,7 @@ module.exports = {
   pagosPorDiaPDF,
   pagosPorMesPDF,
   deudasPorMesPDF,
-  deudasPorRangoPDF
+  deudasPorRangoPDF,
+  deudasDesdePDF
 
 }

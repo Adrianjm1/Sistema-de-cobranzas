@@ -7,6 +7,7 @@ Router.get('/pagos/dia', validToken, Controller.pagosPorDiaPDF);
 Router.get('/pagos/mes', validToken, Controller.pagosPorMesPDF);
 Router.get('/deudas/mes', validToken, Controller.deudasPorMesPDF);
 Router.get('/deudas/rango', validToken, Controller.deudasPorRangoPDF);
+Router.get('/deudas/desde', validToken, Controller.deudasDesdePDF);
 
 
 
