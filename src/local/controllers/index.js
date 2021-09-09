@@ -156,16 +156,8 @@ async function updateTable(req, res) {
         datos.prontoPago = (datos.monthlyUSD - (datos.monthlyUSD * (discount / 100))).toFixed(2);
         datos.prontoPago = Math.round(datos.prontoPago);
 
-
-        // if (day < body.diaProntoPago) {          //SI EL DIA ES MENOR AL ESTABLECIDO, ENTONCES COBRAR PRONTOPAGO, SINO, MONTO COMPLETO
-
-        //   datos.balance = datos.balance - datos.prontoPago;
-
-        //   for (let i = 0; i < data.length; i++) {
-        //     updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, idLGData: LGdata.id }, { where: { code: data[i].code } });
-        //     updatedData = Local.updateTab({ prontoPago: data[i].prontoPago, balance: data[i].balance }, { where: { code: data[i].code } });
-        //   }
-
+        
+        
         if (datos.balance > 0) {
 
           const deuda = {
@@ -175,11 +167,16 @@ async function updateTable(req, res) {
           }
 
           deudasFunctions.create(deuda);
-
+          
         }
+        console.log(' el balance antes de sumarle es ' + datos.balance + 'y le sumo ' + datos.monthlyUSD);
+     
+        
+        datos.balance = parseFloat(datos.balance) + parseFloat(datos.monthlyUSD)
 
-        datos.balance = datos.balance - datos.monthlyUSD
 
+        console.log('el mardito balancedespues de sumarlo es ' + datos.balance);
+        
 
 
       });

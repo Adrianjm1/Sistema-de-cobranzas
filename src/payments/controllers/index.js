@@ -282,7 +282,7 @@ async function make(req, res) {
       })
     }
 
-    data.balance = parseFloat(data.balance) + parseFloat(body.amountUSD) + parseFloat(body.nota);
+    data.balance = parseFloat(data.balance) - parseFloat(body.amountUSD) - parseFloat(body.nota);
 
     body.idLocal = data.id;
     body.idAdmin = req.usuario.id;

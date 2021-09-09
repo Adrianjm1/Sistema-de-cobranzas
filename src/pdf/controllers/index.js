@@ -898,16 +898,16 @@ async function deudasPorMesPDF(req, res) {
 
 
 
-    pdf.create(content).toFile('./docs/pdf-created.pdf', function (err, resp) {
-      if (err) return res.send(err);
-      res.send(resp); // { filename: '/app/businesscard.pdf' }
-    });
+    // pdf.create(content).toFile('./docs/pdf-created.pdf', function (err, resp) {
+    //   if (err) return res.send(err);
+    //   res.send(resp); // { filename: '/app/businesscard.pdf' }
+    // });
 
 
 
 
 
-    /*     pdf.create(content).toStream(function(err, stream){
+         pdf.create(content).toStream(function(err, stream){
           if(err) {
             res.send(err);
           }else{
@@ -918,7 +918,7 @@ async function deudasPorMesPDF(req, res) {
                   stream.pipe(res)
     
           }
-        }); */
+        }); 
 
   } catch (e) {
     res.status(400).send({ error: e.message })
@@ -1261,12 +1261,22 @@ async function deudasDesdePDF(req, res) {
           }
         });
      */
-    pdf.create(content).toFile('./docs/pdf-created.pdf', function (err, resp) {
-      if (err) return res.send(err);
-      res.send(resp); // { filename: '/app/businesscard.pdf' }
+    // pdf.create(content).toFile('./docs/pdf-created.pdf', function (err, resp) {
+    //   if (err) return res.send(err);
+    //   res.send(resp); // { filename: '/app/businesscard.pdf' }
+    // });
+
+    pdf.create(content).toStream(function (err, stream) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.set('Content-type', 'application/pdf');
+        res.set('Content-Disposition', 'attachment;filename=template.pdf')
+        res.set('Cache-Control', 'no-cache')
+        stream.pipe(res)
+
+      }
     });
-
-
 
 
 
