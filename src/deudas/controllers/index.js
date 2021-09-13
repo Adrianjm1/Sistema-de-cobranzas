@@ -27,7 +27,7 @@ async function getDeudas(req, res) {
 
       return res.send({
         ok: false,
-        message: 'Error'
+        message: 'Error 1'
       })
     }
 
@@ -40,20 +40,19 @@ async function getDeudas(req, res) {
     }
 
     const mes1 = `${month.slice(3, 7)}-${month.slice(0, 2)}-01`;
-    const mes2 = `${month.slice(3, 7)}-${month.slice(0, 2)}-30`;
 
     const locales = await LocalFunctions.all({
       attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago', 'balance']
     });
 
-    const LGdata = await LMDFunctions.all({ where: { month: { [Op.between]: [mes1, mes2] } } });
+    const LGdata = await LMDFunctions.all({ where: { month: mes1 } });
 
 
     if (LGdata.length == 0) {
 
       return res.send({
         ok: false,
-        message: 'Error'
+        message: 'Error 2'
       })
     }
 

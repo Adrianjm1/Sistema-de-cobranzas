@@ -113,6 +113,7 @@ async function updateTable(req, res) {
 
     const currentDate = new Date(Date.now());
     const numberMonth = req.body.month.slice(5, 7);
+    const numberYear = req.body.month.slice(0,4);
     const numberMonth1 = parseInt(numberMonth);
 
     // DIA DEL MES PARA DIFERENCIAR ENTRE COBRAR PRONTO PAGO Y MONTO COMPLETP (A DISCUSION)
@@ -149,38 +150,68 @@ async function updateTable(req, res) {
       let discount = LGdata.discount;
 
 
+      for(let i=0; i<data.length; i++){
 
-      data.map(datos => {
-        datos.monthlyUSD = (datos.percentageOfCC * condominio).toFixed(2);  //CALCULO DE CUOTA MENSUAL
-        datos.monthlyUSD = Math.round(datos.monthlyUSD);               //REDONDEAR LOS DATOS ANTES DE REALIZAR EL UPDATE
-        datos.prontoPago = (datos.monthlyUSD - (datos.monthlyUSD * (discount / 100))).toFixed(2);
-        datos.prontoPago = Math.round(datos.prontoPago);
+        data[i].monthlyUSD = (data[i].percentageOfCC * condominio).toFixed(2);  //CALCULO DE CUOTA MENSUAL
+        data[i].monthlyUSD = Math.round(data[i].monthlyUSD);               //REDONDEAR LOS DATOS ANTES DE REALIZAR EL UPDATE
+        data[i].prontoPago = (data[i].monthlyUSD - (data[i].monthlyUSD * (discount / 100))).toFixed(2);
+        data[i].prontoPago = Math.round(data[i].prontoPago);
 
-        
-        
-        if (datos.balance > 0) {
+        let balanceAntes = data[i].balance;
 
-          const deuda = {
-            amountUSD: datos.balance,
-            month: `${parseInt(numberMonth) < 10 ? `0${parseInt(numberMonth)}` : `${parseInt(numberMonth)}`}-${currentDate.getFullYear()}`,
-            idLocal: datos.id
+        data[i].balance = parseFloat(data[i].balance) + parseFloat(data[i].monthlyUSD);
+
+
+        if ((balanceAntes > 0) && (data[i].code != '0000')) {
+
+          const deudaLocal = await deudasFunctions.all({
+            attributes: ['id', 'amountUSD', 'month', 'idLocal'],
+            where: { idLocal: data[i].id },
+            order: [
+              ['id', 'ASC'],
+            ]
+      
+          });
+
+          if (deudaLocal.length > 0){
+
+            let sumaDeudas = 0;
+
+            for(let i=0; i<deudaLocal.length; i++){
+
+              sumaDeudas = sumaDeudas + parseFloat(deudaLocal[i].amountUSD);
+
+            }
+
+            balanceAntes = balanceAntes - sumaDeudas;
+
+            const deuda = {
+              amountUSD: balanceAntes,
+              month: `${parseInt(numberMonth) < 10 ? `0${parseInt(numberMonth)}` : `${parseInt(numberMonth)}`}-${numberYear}`,
+              idLocal: data[i].id
+            }
+  
+            deudasFunctions.create(deuda);
+
+
+          } else{
+
+            const balanceDeuda = parseFloat(data[i].balance) - parseFloat(data[i].monthlyUSD);
+
+            const deuda = {
+              amountUSD: balanceDeuda,
+              month: `${parseInt(numberMonth) < 10 ? `0${parseInt(numberMonth)}` : `${parseInt(numberMonth)}`}-${numberYear}`,
+              idLocal: data[i].id
+            }
+  
+            deudasFunctions.create(deuda);
+
           }
-
-          deudasFunctions.create(deuda);
           
         }
-        console.log(' el balance antes de sumarle es ' + datos.balance + 'y le sumo ' + datos.monthlyUSD);
-     
-        
-        datos.balance = parseFloat(datos.balance) + parseFloat(datos.monthlyUSD)
 
 
-        console.log('el mardito balancedespues de sumarlo es ' + datos.balance);
-        
-
-
-      });
-
+      }
 
       for (let i = 0; i < data.length; i++) {
         updatedData = Local.updateTab({ monthlyUSD: data[i].monthlyUSD, balance: data[i].balance }, { where: { code: data[i].code } });
