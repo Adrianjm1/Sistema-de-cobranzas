@@ -20,10 +20,15 @@ function deleteDeuda(where){
   return Deudas.destroy(where)
 }
 
+function PagoMasDeuda(where){
+  return Deudas.update(where)
+}
+
 module.exports = {
   single,
   create,
   all,
   deleteDeuda,
-  updateDeuda
+  updateDeuda,
+  PagoMasDeuda
 }

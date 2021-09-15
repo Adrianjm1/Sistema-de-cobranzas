@@ -249,9 +249,81 @@ async function updateOrDeleteDeuda(req, res) {
   }
 }
 
+async function PagoMasDeuda(req, res) {
+  try {
+
+    const body = req.body;
+
+    const data = await LocalFunctions.single({
+      attributes: ['id', 'balance'],
+      where: { code: body.code }
+    });
+
+    if (!data) {
+
+      return res.send({
+        ok: false,
+        message: 'El codigo ingresado no existe'
+      })
+    }
+
+    const data2 = await Deudas.single({
+      attributes: ['id', 'amountUSD', 'month'],
+      include: [{ model: Local, attributes: ['name', 'code'] }],
+      where: { idLocal: data.id, month: body.month },
+      order: [
+        ['id', 'DESC'],
+      ]
+
+    });
+
+    if (!data2) {
+
+      return res.send({
+        ok: false,
+        message: 'Este local no posee deudas en el mes ingresado'
+      })
+    }
+
+
+    console.log(body.amountUSD + ' y ademas ' + data2.amountUSD);
+
+    if (parseInt(body.amountUSD) >= parseInt(data2.amountUSD)) {
+      const deudaNueva = {
+        amountUSD: parseInt(data2.amountUSD) - parseInt(body.amountUSD)
+      }
+      console.log('Entre en el primero');
+
+      if ((parseInt(data2.amountUSD) - parseInt(body.amountUSD) <= 0)){
+        console.log('ME BORRAREEEEEEEE');
+        const deudaDeleted = await Deudas.deleteDeuda({ where: { idLocal: data.id, month: body.month } });
+      } else {
+        const deudaUpdated = await Deudas.updateDeuda(deudaNueva, {where: {idLocal: data.id, month: body.month}});
+      }
+
+    } else {
+      console.log('Entre en el segundo');
+      const deudaNueva = {
+        amountUSD: parseInt(data2.amountUSD) - parseInt(body.amountUSD)
+      }
+
+
+      const deudaUpdated = await Deudas.updateDeuda(deudaNueva, {where: {idLocal: data.id, month: body.month}});
+
+
+    }
+
+
+
+  } catch (e) {
+    res.status(400).send({ error: e.message })
+  }
+}
+
 module.exports = {
   getDeudas,
   updateOrDeleteDeuda,
   getDeudasRango,
-  getDeudasDesde
+  getDeudasDesde,
+  PagoMasDeuda
 }
