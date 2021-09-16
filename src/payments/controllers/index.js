@@ -349,7 +349,7 @@ async function updateCode(req, res) {
       where: { code }
     });
 
-    if (!data2) {
+    if (!data2 || data2.length == 0) {
       return res.send({
         ok: false,
         message: 'El codigo ingresado no existe'
@@ -361,16 +361,16 @@ async function updateCode(req, res) {
     });
 
     const oldBalance = {
-      balance: parseFloat(data3.balance) - parseFloat(amount)
+      balance: parseFloat(data3.balance) + parseFloat(amount)
     }
 
     const payment = {
       idLocal: data2.id,
-      restanteUSD: parseFloat(data2.balance) + parseFloat(amount),
+      restanteUSD: parseFloat(data2.balance) - parseFloat(amount),
     }
 
     const balance = {
-      balance: parseFloat(data2.balance) + parseFloat(amount)
+      balance: parseFloat(data2.balance) - parseFloat(amount)
     }
 
 
