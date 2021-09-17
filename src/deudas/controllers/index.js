@@ -194,17 +194,17 @@ async function updateOrDeleteDeuda(req, res) {
     }
 
 
-    if (parseInt(body.amountUSD) > parseInt(-data2.amountUSD)) {
+    if (parseFloat(body.amountUSD) > parseFloat(data2.amountUSD)) {
 
       return res.send({
         ok: false,
         message: 'Monto mayor a la deuda'
       })
 
-    } else if (parseInt(body.amountUSD) == parseInt(-data2.amountUSD)) {
+    } else if (parseFloat(body.amountUSD) == parseFloat(data2.amountUSD)) {
 
 
-      data.balance = parseFloat(data.balance) + parseFloat(body.amountUSD);
+      data.balance = parseFloat(data.balance) - parseFloat(body.amountUSD);
 
       body.idLocal = data.id;
       body.idAdmin = req.usuario.id;
@@ -222,10 +222,10 @@ async function updateOrDeleteDeuda(req, res) {
     } else {
 
       const deudaNueva = {
-        amountUSD: parseInt(data2.amountUSD) + parseInt(body.amountUSD)
+        amountUSD: parseFloat(data2.amountUSD) - parseFloat(body.amountUSD)
       }
 
-      data.balance = parseFloat(data.balance) + parseFloat(body.amountUSD);
+      data.balance = parseFloat(data.balance) - parseFloat(body.amountUSD);
 
       body.idLocal = data.id;
       body.idAdmin = req.usuario.id;
