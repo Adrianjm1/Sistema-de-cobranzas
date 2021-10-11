@@ -194,17 +194,17 @@ async function updateOrDeleteDeuda(req, res) {
     }
 
 
-    if (parseFloat(body.amountUSD) > parseFloat(data2.amountUSD)) {
+    if (parseInt(body.amountUSD) > parseInt(-data2.amountUSD)) {
 
       return res.send({
         ok: false,
         message: 'Monto mayor a la deuda'
       })
 
-    } else if (parseFloat(body.amountUSD) == parseFloat(data2.amountUSD)) {
+    } else if (parseInt(body.amountUSD) == parseInt(-data2.amountUSD)) {
 
 
-      data.balance = parseFloat(data.balance) - parseFloat(body.amountUSD);
+      data.balance = parseFloat(data.balance) + parseFloat(body.amountUSD);
 
       body.idLocal = data.id;
       body.idAdmin = req.usuario.id;
@@ -222,10 +222,10 @@ async function updateOrDeleteDeuda(req, res) {
     } else {
 
       const deudaNueva = {
-        amountUSD: parseFloat(data2.amountUSD) - parseFloat(body.amountUSD)
+        amountUSD: parseInt(data2.amountUSD) + parseInt(body.amountUSD)
       }
 
-      data.balance = parseFloat(data.balance) - parseFloat(body.amountUSD);
+      data.balance = parseFloat(data.balance) + parseFloat(body.amountUSD);
 
       body.idLocal = data.id;
       body.idAdmin = req.usuario.id;
@@ -295,7 +295,6 @@ async function PagoMasDeuda(req, res) {
       console.log('Entre en el primero');
 
       if ((parseInt(data2.amountUSD) - parseInt(body.amountUSD) <= 0)){
-        console.log('ME BORRAREEEEEEEE');
         const deudaDeleted = await Deudas.deleteDeuda({ where: { idLocal: data.id, month: body.month } });
       } else {
         const deudaUpdated = await Deudas.updateDeuda(deudaNueva, {where: {idLocal: data.id, month: body.month}});
@@ -327,3 +326,230 @@ module.exports = {
   getDeudasDesde,
   PagoMasDeuda
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
