@@ -194,7 +194,7 @@ async function updateOrDeleteDeuda(req, res) {
     }
 
 
-    if (parseInt(body.amountUSD) > parseInt(-data2.amountUSD)) {
+    if (parseInt(body.amountUSD) > parseInt(data2.amountUSD)) {
 
       return res.send({
         ok: false,

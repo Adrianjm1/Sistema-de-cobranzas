@@ -604,6 +604,7 @@ async function pagosPorMesPDF(req, res) {
             <body>
             
             <h2>CONDOMINIO CENTRO LAGO MALL</h2>
+            <h2>RIF J-305744734</h2>
 
             <p>Emitido el ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}</p>
 
@@ -829,17 +830,16 @@ async function deudasPorMesPDF(req, res) {
             <body>
             
             <h2>CONDOMINIO CENTRO LAGO MALL</h2>
+            <h2>RIF J-305744734</h2>
 
             <p>Emitido el ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}</p>
 
             <h3>Deudas del mes de ${meses[parseInt(month.slice(0, 2)) - 1]} del año ${month.slice(3, 7)}</h3>
                       
-            <p> Total en deudas del mes: &nbsp;&nbsp;&nbsp; ${sumDeudas}$</p>
 
             <p> Cuota total del mes: &nbsp;&nbsp;&nbsp; ${suma}$</p>
 
-            <p> Porcentaje pagado con respecto a la cuota total del mes: &nbsp;&nbsp;&nbsp; ${100 - parseFloat(porcentaje).toFixed(2)}%</p>
-
+ 
 
             <br>
 
@@ -1202,6 +1202,7 @@ async function deudasDesdePDF(req, res) {
             <body>
             
             <h2>CONDOMINIO CENTRO LAGO MALL</h2>
+            <h2>RIF J-305744734</h2>
 
             <p>Emitido el ${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}</p>
 
