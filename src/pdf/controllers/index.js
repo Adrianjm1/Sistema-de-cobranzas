@@ -113,7 +113,7 @@ async function getTablePDF(req, res) {
                     }
                     
                     tbody td {
-                      text-align: center;
+                      text-align: right;
                       padding: 7px 0px 7px 0px;
                     }
                     
@@ -342,6 +342,16 @@ async function pagosPorDiaPDF(req, res) {
                       text-align: center;
                       padding: 7px 0px 7px 0px;
                     }
+
+                    tbody .monto {
+                      text-align: right !important;
+                      padding: 7px 0px 7px 0px;
+                    }
+
+                    tbody .monto-l {
+                      text-align: left !important;
+                      padding: 7px 0px 7px 0px;
+                    }
                     
                     tfoot th {
                       text-align: right;
@@ -414,13 +424,13 @@ async function pagosPorDiaPDF(req, res) {
         part2 = part2 + `
           <tr>
           <td>${data.locale.code}</td>
-          <td>${formatNumber(parseFloat(data.amountUSD))}</td>
-          <td>${formatNumber((parseFloat(data.amountUSD) * parseFloat(data.exchangeRate)).toFixed(2))}</td>
+          <td class="monto">${formatNumber(parseFloat(data.amountUSD))}</td>
+          <td class="monto">${formatNumber((parseFloat(data.amountUSD) * parseFloat(data.exchangeRate)).toFixed(2))}</td>
           <td>${data.referenceNumber}</td>
           <td>${data.bank}</td>
-          <td>${formatNumber(parseFloat(data.exchangeRate).toFixed(2))}</td>
+          <td class="monto">${formatNumber(parseFloat(data.exchangeRate).toFixed(2))}</td>
           <td>${data.paymentUSD === false ? 'No' : 'Si'}</td>
-          <td>${formatNumber(parseFloat(data.restanteUSD))}</td>
+          <td class="monto-l">${formatNumber(parseFloat(data.restanteUSD))}</td>
           <td>${data.admin.username}</td>
 
           </tr>`
@@ -588,6 +598,16 @@ async function pagosPorMesPDF(req, res) {
                       text-align: center;
                       padding: 7px 0px 7px 0px;
                     }
+
+                    tbody .monto {
+                      text-align: right !important;
+                      padding: 7px 0px 7px 0px;
+                    }
+
+                    tbody .monto-l {
+                      text-align: left !important;
+                      padding: 7px 0px 7px 0px;
+                    }
                     
                     tfoot th {
                       text-align: right;
@@ -663,13 +683,13 @@ async function pagosPorMesPDF(req, res) {
           <tr>
           <td>${data.locale.code}</td>
           <td>${data.date}</td>
-          <td>${formatNumber(parseFloat(data.amountUSD))}</td>
-          <td>${formatNumber((parseFloat(data.amountUSD) * parseFloat(data.exchangeRate)).toFixed(2))}</td>
+          <td class="monto">${formatNumber(parseFloat(data.amountUSD))}</td>
+          <td class="monto">${formatNumber((parseFloat(data.amountUSD) * parseFloat(data.exchangeRate)).toFixed(2))}</td>
           <td>${data.referenceNumber}</td>
           <td>${data.bank}</td>
-          <td>${formatNumber(parseFloat(data.exchangeRate).toFixed(2))}</td>
+          <td class="monto">${formatNumber(parseFloat(data.exchangeRate).toFixed(2))}</td>
           <td>${data.paymentUSD === false ? 'No' : 'Si'}</td>
-          <td>${formatNumber(parseFloat(data.restanteUSD))}</td>
+          <td class="monto-l">${formatNumber(parseFloat(data.restanteUSD))}</td>
           <td>${data.admin.username}</td>
 
           </tr>`
@@ -814,6 +834,11 @@ async function deudasPorMesPDF(req, res) {
                       text-align: center;
                       padding: 7px 0px 7px 0px;
                     }
+
+                    tbody .monto {
+                      text-align: right !important;
+                      padding: 7px 25px 7px 0px;
+                    }
                     
                     tfoot th {
                       text-align: right;
@@ -837,7 +862,7 @@ async function deudasPorMesPDF(req, res) {
             <h3>Deudas del mes de ${meses[parseInt(month.slice(0, 2)) - 1]} del año ${month.slice(3, 7)}</h3>
                       
 
-            <p> Cuota total del mes: &nbsp;&nbsp;&nbsp; ${suma}$</p>
+            <p> Cuota total del mes: &nbsp;&nbsp;&nbsp; ${formatNumber(suma)}$</p>
 
  
 
@@ -865,7 +890,7 @@ async function deudasPorMesPDF(req, res) {
         <td>${data.locale.code}</td>
         <td>${data.locale.name}</td>
         <td>${`${meses[parseInt(data.month.slice(0, 2)) - 1]} ${data.month.slice(3, 7)}`}</td>
-        <td>${formatNumber(parseFloat(data.amountUSD))}</td>
+        <td class="monto">${formatNumber(parseFloat(data.amountUSD))}</td>
 
           </tr>`
 
@@ -1012,6 +1037,11 @@ async function deudasPorRangoPDF(req, res) {
                       text-align: right;
                     }
 
+                    tbody .monto {
+                      text-align: right !important;
+                      padding: 7px 25px 7px 0px;
+                    }
+
                     thead th, tfoot th {
                       background-color: #19437F;
                       color: #fff;
@@ -1028,7 +1058,7 @@ async function deudasPorRangoPDF(req, res) {
 
             <h3>Deudas entre los meses de ${meses[parseInt(month1.slice(0, 2)) - 1]} ${month1.slice(3, 7)} y ${meses[parseInt(month2.slice(0, 2)) - 1]} ${month2.slice(3, 7)}</h3>
                       
-            <p> Total en deudas en el rango establecido: &nbsp;&nbsp;&nbsp; ${sumDeudas}</p>
+            <p> Total en deudas en el rango establecido: &nbsp;&nbsp;&nbsp; ${formatNumber(parseFloat(sumDeudas) * -1)}$</p>
 
             <br>
 
@@ -1053,7 +1083,7 @@ async function deudasPorRangoPDF(req, res) {
       part2 = part2 + `
         <td>${data2[i].locale.code}</td>
         <td>${data2[i].locale.name}</td>
-        <td>${formatNumber(parseFloat(data[i].deudaTotal))}</td>        
+        <td class="monto">${formatNumber(parseFloat(data[i].deudaTotal))}</td>        
 
           </tr>`
 
@@ -1191,6 +1221,11 @@ async function deudasDesdePDF(req, res) {
                       text-align: right;
                     }
 
+                    tbody .monto {
+                      text-align: right !important;
+                      padding: 7px 25px 7px 0px;
+                    }
+
                     thead th, tfoot th {
                       background-color: #19437F;
                       color: #fff;
@@ -1231,7 +1266,7 @@ async function deudasDesdePDF(req, res) {
       part2 = part2 + `
         <td>${data2[i].locale.code}</td>
         <td>${data2[i].locale.name}</td>
-        <td>${formatNumber(parseFloat(data[i].deudaTotal))}</td>        
+        <td class="monto">${formatNumber(parseFloat(data[i].deudaTotal))}</td>        
 
           </tr>`
 

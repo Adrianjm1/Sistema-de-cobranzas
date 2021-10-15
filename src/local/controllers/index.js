@@ -238,7 +238,7 @@ async function updateTable(req, res) {
 
       }
 
-
+      console.log(data.length);
       res.send(data);
 
     }

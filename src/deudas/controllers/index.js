@@ -222,10 +222,10 @@ async function updateOrDeleteDeuda(req, res) {
     } else {
 
       const deudaNueva = {
-        amountUSD: parseInt(data2.amountUSD) + parseInt(body.amountUSD)
+        amountUSD: parseInt(data2.amountUSD) - parseInt(body.amountUSD)
       }
 
-      data.balance = parseFloat(data.balance) + parseFloat(body.amountUSD);
+      data.balance = parseFloat(data.balance) - parseFloat(body.amountUSD);
 
       body.idLocal = data.id;
       body.idAdmin = req.usuario.id;
