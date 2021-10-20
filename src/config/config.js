@@ -40,10 +40,10 @@ if (process.env.NODE_ENV === 'dev') {
     dbPassword = '';
     dbHost = 'localhost'
 } else {
-    dbName = 'epiz_30111988_lagotest';
-    dbUser = 'epiz_30111988';
-    dbPassword = 'y1ONARfdkaJG3gI';
-    dbHost = 'sql305.epizy.com';
+    dbName = 'bp430b1ijxtxpf3grgc7';
+    dbUser = 'ujcooqp0twjfxwgq';
+    dbPassword = 'SVVIHK3G0oypEagtkyxn';
+    dbHost = 'bp430b1ijxtxpf3grgc7-mysql.services.clever-cloud.com';
 }
 
 process.env.DBNAME = dbName;
