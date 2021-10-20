@@ -42,7 +42,8 @@ if (process.env.NODE_ENV === 'dev') {
 } else {
     dbName = 'epiz_30111988_lagotest';
     dbUser = 'epiz_30111988';
-    dbPassword = 'y1ONARfdkaJG3gI';
+    //dbPassword = 'y1ONARfdkaJG3gI';
+    dbPassword = 'Lagomall2021';
     dbHost = 'sql305.epizy.com';
 }
 
