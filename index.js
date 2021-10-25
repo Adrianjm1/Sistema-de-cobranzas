@@ -1,3 +1,4 @@
+require('dotenv').config();
 require('./src/config/config');
 const express = require('express');
 const app = express();
@@ -13,4 +14,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Router
 app.use('/api', require('./src/router'));
 
-app.listen(process.env.PORT, db)
+app.listen(process.env.PORT || 5000, db)

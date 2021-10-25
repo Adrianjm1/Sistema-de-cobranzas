@@ -3,7 +3,7 @@ const Admin = require('../domain');
 const jwt = require('jsonwebtoken');
 const { Id, Schema, Username } = require('../validations');
 
-async function getAll(req, res){
+/* async function getAll(req, res){
   try {
     const data = await Admin.all();
     res.send(data)
@@ -23,8 +23,8 @@ async function getOne(req, res){
     res.status(400).send({error: e.message})
   }
 }
-
-async function make(req, res){
+ */
+/* async function make(req, res){
   try {
     const body = await Schema.validateAsync(req.body);
     const data = await Admin.create(body);
@@ -32,9 +32,9 @@ async function make(req, res){
   } catch (e) {
     res.status(400).send({error: e.message})
   }
-}
+} */
 
-async function signUp(req, res){
+/* async function signUp(req, res){
   try {
     const body = await Schema.validateAsync(req.body);
     body.password = md5(body.password);
@@ -44,7 +44,7 @@ async function signUp(req, res){
   } catch (e) {
     res.status(400).send({error: e.message})
   }
-}
+} */
 
 async function login(req, res){
 
@@ -77,6 +77,8 @@ async function login(req, res){
       usuario: data
     }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
 
+    console.log(process.env.NODE_ENV);
+
     res.send({
       ok: true,
       usuario: data,
@@ -87,13 +89,12 @@ async function login(req, res){
     res.status(400).send({error: e.message})
   }
 
-
-
 }
 
 module.exports = {
-  getAll,
-  getOne,
-  signUp,
+
   login
+//  signUp,
+//  getAll,
+//  getOne,
 }
