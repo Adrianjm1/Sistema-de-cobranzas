@@ -39,43 +39,10 @@ async function getDeudas(req, res) {
 
     }
 
-    const mes1 = `${month.slice(3, 7)}-${month.slice(0, 2)}-01`;
-
-    const locales = await LocalFunctions.all({
-      attributes: ['name', 'code', 'percentageOfCC', 'monthlyUSD', 'prontoPago', 'balance']
-    });
-
-    const LGdata = await LMDFunctions.all({ where: { month: mes1 } });
-
-
-    if (LGdata.length == 0) {
-
-      return res.send({
-        ok: false,
-        message: 'Error 2'
-      })
-    }
-
-    let condominio = (LGdata[0].breakeven * LGdata[0].meter);  // MONTO DEL CONDOMINIO
-
-    let suma = 0
-
-    locales.map(datos => {
-      datos.monthlyUSD = (datos.percentageOfCC * condominio).toFixed(2);
-      datos.monthlyUSD = Math.round(datos.monthlyUSD);
-
-      suma = suma + datos.monthlyUSD;
-
-    });
-
-    let porcentaje = (sumDeudas * 100) / suma;
-
     res.send({
       ok: true,
       data,
-      sumDeudas,
-      porcentaje,
-      suma
+      sumDeudas
     });
 
   } catch (e) {
