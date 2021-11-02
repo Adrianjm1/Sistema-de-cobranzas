@@ -1,7 +1,7 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 
 
-if (process.env.NODE_ENV === 'dev') {
+if (process.env.NODE_ENV == 'dev') {
 
     process.env.DBNAME = 'centrode_lagomall';
     process.env.DBUSER = 'centrode_admin';

@@ -5,6 +5,7 @@ const app = express();
 const db = require('./src/database/controller/index');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+
 // Configuración del servidor
 app.use(cors())
 app.use(bodyParser.json());
