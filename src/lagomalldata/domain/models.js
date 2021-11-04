@@ -29,6 +29,6 @@ LagoMallData.init({
     type: DataTypes.INTEGER,
     allowNull: false
   }
-}, {sequelize: db, modelName: 'lagoMallData'});
+}, {sequelize: db, modelName: 'lagomalldata'});
 
 module.exports = LagoMallData;
