@@ -52,7 +52,6 @@ async function login(req, res){
     const { username, password } = await Username.validateAsync(req.body);
 
     const passwordHash = md5(password);
-    console.log(password);
     const data = await Admin.single({
       where: {username}
     });

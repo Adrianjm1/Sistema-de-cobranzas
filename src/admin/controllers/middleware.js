@@ -29,7 +29,7 @@ let verificaAdminMaster = (req, res, next) => {
 
     let usuario = req.usuario;
 
-    if (usuario.id === 1) {
+    if (usuario.id === 1 || usuario.id === 2) {
 
         next();
     } else {
