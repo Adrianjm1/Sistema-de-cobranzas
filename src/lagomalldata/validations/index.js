@@ -13,7 +13,7 @@ module.exports.Id = Joi.object({
 
 module.exports.BreakE = Joi.object({
   id: Joi.number().min(1),
-  breakeven: Joi.number().min(0).precision(1).required(),
+  breakeven: Joi.number().min(0).precision(2).required(),
   month: Joi.date().required(),
   discount: Joi.number().required(),
   meter: Joi.number(),
