@@ -14,7 +14,7 @@ async function getPaymentsByLocal(req, res) {    // SE REQUIEREN LOS PAGOS POR L
 
 
     const data = await Payments.allPaymentsByLocal({
-      attributes: ['id', 'amountUSD','idLocal', 'referenceNumber', 'restanteUSD', 'bank', 'createdAt', 'date', 'exchangeRate', 'description', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
+      attributes: ['id', 'amountUSD','idLocal', 'referenceNumber', 'restanteUSD', 'bank', 'createdAt', 'date','nota' , 'exchangeRate', 'description', 'paymentUSD', [Sequelize.literal('(exchangeRate * amountUSD)'), 'amountBS']],
       include: [{ model: Admin, attributes: ['username'] }, { model: Local, attributes: ['name', 'code'], where: { code } }],
       order: [
         ['id', 'DESC'],
